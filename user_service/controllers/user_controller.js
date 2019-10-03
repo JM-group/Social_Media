@@ -1,28 +1,31 @@
 const UserModel = require('../models/user.js');
 const UserDetailsModel = require('../models/user_details.js')
+const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth.js');
 
 // Create and Save a new User
-exports.create = (req, res) => {
-    const user_data_object = new UserModel({
-        email: req.body.email,
-        ph_number: req.body.ph_number,
-        auth_token:req.body.auth_token,
-        refresh_token:req.body.refresh_token,
-        first_name:req.body.first_name,
-        last_name:req.body.last_name,
-        gender:req.body.gender,
-        age:req.body.age
-    });
+exports.create = async(req, res) => {
+    try {
+       // UserModel.init().then(() => {
+            const user_data_object = new UserModel({
+                email: req.body.email,
+                ph_number: req.body.ph_number,
+                auth_token:req.body.auth_token,
+                refresh_token:req.body.refresh_token,
+                first_name:req.body.first_name,
+                last_name:req.body.last_name,
+                gender:req.body.gender,
+                age:req.body.age,
+            });
 
-    // Save 
-    user_data_object.save().then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the record."
-        });
-    });
-
+            // Save 
+            await user_data_object.save()
+            
+           const token = await user_data_object.generateAuthToken()
+            res.status(201).send({ user_data_object })
+    } catch (error) {
+        res.status(400).send(error)
+    }    
 };
 
 /*
@@ -40,6 +43,47 @@ exports.create = (req, res) => {
     }
 
 */
+
+exports.login = async(req, res) => {
+    console.log(req.body.email);
+    console.log('///////////////////////////');
+    const user = await UserModel.findByCredentials(req.body.email);
+    console.log(user);
+    if (!user) {
+        console.log('inside first ifff');
+        const user_data_object = new UserModel({
+            email: req.body.email,
+            ph_number: req.body.ph_number,
+            auth_token:req.body.auth_token,
+            refresh_token:req.body.refresh_token,
+            first_name:req.body.first_name,
+            last_name:req.body.last_name,
+            gender:req.body.gender,
+            age:req.body.age,
+        });
+
+        // Save 
+        user_data_object.save().then(data => {
+            console.log('inside then fun hereeeeeeee //////// <<<<>>>>>><<<>>>');
+            console.log(data);
+            res.send(data);
+        }).catch(err => {
+            console.log('inside errorr here main');
+            console.log(err);
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating the record."
+            });
+        });
+    } else {
+        console.log('inside 222333');
+        user.status = true;
+        const token = await user.generateAuthToken('login');
+        console.log(token);
+        res.send({ user, token });
+    }
+}
+
+
 
 // Update or edit information about user
 exports.update = (req, res) => {
@@ -133,4 +177,46 @@ exports.delete = (req, res) => {
             message: "Could not delete note with id " + req.params.festiveId
         });
     });
+};
+
+//Logout user form his/her device
+exports.logout = async(req, res) => {
+    console.log('11111111111111111111');
+    console.log(req.body)
+    console.log(req.body.email)
+    console.log(req.body.token);
+    const user = await UserModel.findByCredentials(req.body.email);
+    if (user) {
+        try {
+            user.tokens = user.tokens.filter((token) => {
+                return token.token != req.body.token
+            })
+            await user.save()
+            res.send()
+        } catch (error) {
+            res.status(500).send(error)
+        }
+    } else {
+        res.send({ 'error': 'No such user exist in this email' });
+    }    
+};
+
+//Logout user from all his devices
+exports.logout_all = async(req, res) => {
+    console.log('22222222222222');
+    console.log(req.body)
+    console.log(req.body.email)
+    console.log(req.body.token)
+    const user = await UserModel.findByCredentials(req.body.email);
+    if (user) {
+        try {
+            user.tokens.splice(0, user.tokens.length)
+            await user.save()
+            res.send()
+        } catch (error) {
+            res.status(500).send(error)
+        }
+    } else {
+        res.send({'error': 'No such user exist in this email'})
+    }    
 };
