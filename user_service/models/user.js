@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
-const validator = require('validator')
+const validator = require('validator');
+const envFile = require('../env.js');
 
 mongoose.set('useCreateIndex', true);
+console.log('pppppppppppppppppppppppppppppppppppppppppp');
+console.log(envFile);
+console.log(envFile['secret']);
 
 const user_schema = mongoose.Schema({
     email: { type: String, required: true, unique: true, dropDups: true, lowercase: true},
@@ -29,8 +33,8 @@ const user_schema = mongoose.Schema({
 user_schema.methods.generateAuthToken = async function() {
     // Generate an auth token for the user
     console.log('entering generate auth method inside here');
-    const user = this, JWT_KEY = 'lorem'
-    const token = jwt.sign({_id: user._id}, JWT_KEY)
+    const user = this;
+    const token = jwt.sign({_id: user._id}, envFile['secret'])
     console.log('token valueeeee is ==', token);
     user.tokens = user.tokens.concat({token})
     await user.save()
