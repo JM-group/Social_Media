@@ -45,10 +45,7 @@ exports.create = async(req, res) => {
 */
 
 exports.login = async(req, res) => {
-    console.log(req.body.email);
-    console.log('///////////////////////////');
     const user = await UserModel.findByCredentials(req.body.email);
-    console.log(user);
     if (!user) {
         console.log('inside first ifff');
         const user_data_object = new UserModel({
@@ -64,12 +61,8 @@ exports.login = async(req, res) => {
 
         // Save 
         user_data_object.save().then(data => {
-            console.log('inside then fun hereeeeeeee //////// <<<<>>>>>><<<>>>');
-            console.log(data);
             res.send(data);
         }).catch(err => {
-            console.log('inside errorr here main');
-            console.log(err);
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the record."
             });
@@ -87,11 +80,6 @@ exports.login = async(req, res) => {
 
 // Update or edit information about user
 exports.update = (req, res) => {
-    console.log(req.body);
-    console.log(req.body.email);
-    console.log(req.query);
-    console.log(req.params.id);
-    console.log('//////////');
     UserModel.findByIdAndUpdate(req.params.id, {$set:{
         email: req.body.email,
         ph_number: req.body.ph_number,
@@ -103,8 +91,6 @@ exports.update = (req, res) => {
         age:req.body.age
     }}, {new: true})
     .then(data => {
-        console.log('inside theeennnnnnn herreeeee');
-        console.log(data);
         if(!data) {
             return res.status(404).send({
                 message: "Record not found with id " + req.params.festiveId
@@ -112,7 +98,6 @@ exports.update = (req, res) => {
         }
         res.send(data);
     }).catch(err => {
-        console.log('inside erroeeeerrrrrrrrr');
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "Record not found with id " + req.params.festiveId
@@ -122,43 +107,15 @@ exports.update = (req, res) => {
             message: "Error updating record with id " + req.params.festiveId
         });
     });
-    
-    /* function (err, response) {
-      // Handle any possible database errors
-      if (err) {
-        console.log("we hit an error" + err);
-        response.json({
-          message: 'Database Update Failure'
-        });
-      } else {
-        console.log(response);
-        response.json({
-            message: 'SSSSSS'
-        })
-      }
-      console.log("This is the Response: " + res);
-    } */
 };
 
 // Get details about user
 exports.get = (request, response) => {
-    UserModel.findById(request.params.id).exec().then(data => {
-        response.send(data);
-    }).catch(err => {
-        response.status(500).send({
-            message: err.message || "Some error occurred while creating the record."
-        });
-    }); 
+    response.send(request.user)
 };
 
 // Delete user / user details / follwers following entry
 exports.delete = (req, res) => {
-    /* try {
-        var result = UserModel.deleteOne({ _id: request.params.id }).exec();
-        response.send(result);
-    } catch (error) {
-        response.status(500).send(error);
-    }  */
     UserModel.findByIdAndRemove(req.params.id)
     .then(festive => {
         if(!festive) {
@@ -181,10 +138,6 @@ exports.delete = (req, res) => {
 
 //Logout user form his/her device
 exports.logout = async(req, res) => {
-    console.log('11111111111111111111');
-    console.log(req.body)
-    console.log(req.body.email)
-    console.log(req.body.token);
     const user = await UserModel.findByCredentials(req.body.email);
     if (user) {
         try {
@@ -203,10 +156,6 @@ exports.logout = async(req, res) => {
 
 //Logout user from all his devices
 exports.logout_all = async(req, res) => {
-    console.log('22222222222222');
-    console.log(req.body)
-    console.log(req.body.email)
-    console.log(req.body.token)
     const user = await UserModel.findByCredentials(req.body.email);
     if (user) {
         try {
@@ -220,3 +169,5 @@ exports.logout_all = async(req, res) => {
         res.send({'error': 'No such user exist in this email'})
     }    
 };
+
+

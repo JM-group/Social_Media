@@ -2,10 +2,12 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user.js')
 
 const auth = async(req, res, next) => {
-    const token = req.header('Authorization').replace('Bearer ', '')
-    const data = jwt.verify(token, 'lorem')
+    const token = req.query.tokens;
+    console.log(token);
+    var data = '';
     try {
-        const user = await User.findOne({ _id: data._id, 'tokens.token': token })
+        data = jwt.verify(token, 'lorem')
+        const user = await User.findOne({ _id: data._id._id, 'tokens.token': token })
         if (!user) {
             throw new Error()
         }
@@ -18,3 +20,12 @@ const auth = async(req, res, next) => {
 
 }
 module.exports = auth
+
+
+
+
+
+
+
+
+

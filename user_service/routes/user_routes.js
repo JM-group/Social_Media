@@ -7,11 +7,11 @@ module.exports = (app) => {
 
     app.post('/user', user.create);
 
-    // Update a Note with festiveId
+    // Update user details
     app.put('/user/:id', user.update);
 
     // Get user details and followers information
-    app.get('/user/:id', user.get);
+    app.get('/user/:id', auth, user.get);
     
     //Logout / Logout user from all devices
     app.post('/logout', user.logout);
