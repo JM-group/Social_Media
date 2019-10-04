@@ -5,9 +5,6 @@ const validator = require('validator');
 const envFile = require('../env.js');
 
 mongoose.set('useCreateIndex', true);
-console.log('pppppppppppppppppppppppppppppppppppppppppp');
-console.log(envFile);
-console.log(envFile['secret']);
 
 const user_schema = mongoose.Schema({
     email: { type: String, required: true, unique: true, dropDups: true, lowercase: true},
