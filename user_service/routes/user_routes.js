@@ -14,9 +14,9 @@ module.exports = (app) => {
     app.get('/user/:id', user.get);
     
     //Logout / Logout user from all devices
-    app.post('/logout')
+    app.post('/logout', user.logout);
     
-    app.post('/logout_all')
+    app.post('/logout_all', user.logout_all)
 
     // Delete a Note with festiveId
     app.delete('/user/:id', user.delete);

@@ -191,7 +191,7 @@ exports.logout = async(req, res) => {
             user.tokens = user.tokens.filter((token) => {
                 return token.token != req.body.token
             })
-            await user.save()
+            await user.save({message: 'Successfully Logged out'})
             res.send()
         } catch (error) {
             res.status(500).send(error)
@@ -212,7 +212,7 @@ exports.logout_all = async(req, res) => {
         try {
             user.tokens.splice(0, user.tokens.length)
             await user.save()
-            res.send()
+            res.send({message: 'Successfully Logged out from all devices'});
         } catch (error) {
             res.status(500).send(error)
         }
