@@ -68,3 +68,19 @@ const User = mongoose.model('user', user_schema);
 module.exports = User
 
 
+/*
+JSON to create user
+
+{
+    "email": "mas11@g2ail.com",
+    "ph_number": 16478037288,
+    "auth_token": "156a",
+    "refresh_token": "5679",
+    "first_name": "Mohamed",
+    "last_name": "12355Ashif",
+    "gender": "Male",
+    "age": 22,
+  	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJtYXNoaTI2MTFAZ2FpbC5jb20iLCJpYXQiOjE1NzAxMzg0MDB9.JDg_MSaaeqXVMvHh-ZylGafF5rhtaGYTuhgVKO2v63Y" 
+}
+
+*/
