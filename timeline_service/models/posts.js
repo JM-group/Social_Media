@@ -4,7 +4,8 @@ const post_schema = mongoose.Schema({
     user_id: String,
     description: String,
     post_media: Array,
-    community_id: String
+    community_id: String,
+    location: Array,
 }, {
     timestamps: true
 });
@@ -31,3 +32,32 @@ post_schema.virtual('shares', {
 });
 
 module.exports = mongoose.model('post', post_schema);
+
+
+
+/*
+
+// Json format to create post
+
+{
+	"user_id": "12",
+	"community_id": "16",
+	"description": "lorem Epsom",
+	"location": [],
+	"post_media": [{
+		"id": "",
+		"media_url": "",
+		"tags": [{
+			"co_ords": [],
+			"user_name": "",
+			"place_name": ""
+		}, {
+			"co_ords": [],
+			"user_name": "",
+			"place_name": ""
+		}]
+	}]
+}
+
+
+*/

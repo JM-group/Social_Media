@@ -16,7 +16,7 @@ const user_schema = mongoose.Schema({
     gender: String,
     age: Number,
     profile_pic: String,
-    status: Boolean,
+    status: Boolean, 
     tokens: [{
         token: {
             type: String,

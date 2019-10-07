@@ -50,6 +50,7 @@ app.get('/', (req, res) => {
 });
 
 require('./user_service/routes/user_routes.js')(app);
+require('./timeline_service/routes/timeline_routes.js')(app);
 
 var server=app.listen(3000,function() {
     console.log('listening hereeeee');

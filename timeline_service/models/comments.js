@@ -12,7 +12,7 @@ const comments_schema = mongoose.Schema({
     timestamps: true
 });
 
-post_schema.virtual('likes', {
+comments_schema.virtual('likes', {
     ref: 'likes', 
     localField: '_id',
     foreignField: 'post_id', 
