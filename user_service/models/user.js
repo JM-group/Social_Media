@@ -79,8 +79,7 @@ JSON to create user
     "first_name": "Mohamed",
     "last_name": "12355Ashif",
     "gender": "Male",
-    "age": 22,
-  	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJtYXNoaTI2MTFAZ2FpbC5jb20iLCJpYXQiOjE1NzAxMzg0MDB9.JDg_MSaaeqXVMvHh-ZylGafF5rhtaGYTuhgVKO2v63Y" 
+    "age": 22
 }
 
 */
