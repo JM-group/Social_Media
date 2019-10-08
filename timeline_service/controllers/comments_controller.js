@@ -129,16 +129,3 @@ exports.delete = async(req, res) => {
         res.status(400).send(error)
     }
 };  
-
-//Delete Post Object
-/*exports.delete = async(req, res) => {
-    console.log('inside geeetttttttttt valueeeeeeee');
-    console.log(req.query);
-    console.log(req.params);
-    try {
-        const post_data_object = await PostModel.findByIdAndDelete(req.params.id);
-        res.status(201).send({ "status": "Successfuly deleted post" })        
-    } catch (error) {
-        res.status(400).send(error)
-    }
-};  */

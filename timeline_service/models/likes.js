@@ -12,3 +12,17 @@ const likes_schema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('likes', likes_schema);
+
+
+/*
+    JSON to post likes
+
+    {
+        post_id: "",
+        media_id: "",
+        parent_comment_id: "",
+        comment_id: "",
+        liked_by: []
+    }
+
+*/

@@ -1,6 +1,6 @@
 module.exports = (app) => {
     const post = require('../controllers/post_controller.js');
-    const like = require('../controllers/likes_controller.js');
+    const likes = require('../controllers/likes_controller.js');
     const comments = require('../controllers/comments_controller.js');
 
     // Create a new Record / Signup
@@ -31,14 +31,20 @@ module.exports = (app) => {
     app.delete('/comments/:id', comments.delete);       
 
     // Create a entry for post likes
-    app.post('/like/post/:id', like.createUpdatePostLikes);
+    app.post('/likes/post/:id', likes.createPostLikes);
+
+    // Update post likes
+    app.put('/likes/post/:id', likes.updatePostLikes);
 
     // Create a entry for comments likes
-    app.post('/like/comment/:id', like.createUpdateComentsLikes);
+    app.post('/likes/comment/:id/:comment_id', likes.createCommentsLikes);
 
+    // Create a entry for comments likes
+    app.put('/likes/comment/:id/:comment_id', likes.updateCommentsLikes);
+    
     // Get user details and followers information
-    app.get('/like/post/:id', like.getPostLikes);
+    app.get('/likes/post/:id', likes.getPostLikes);
 
     // Delete a Note with festiveId
-    app.get('/like/comment/:id', like.getCommentsLikes);   
+    app.get('/likes/comment/:id', likes.getCommentsLikes);   
 }

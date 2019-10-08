@@ -1,61 +1,81 @@
 const PostModel = require('../models/posts.js');
 const LikesModel = require('../models/likes.js')
-const CommentsModel = require('../models/comments.js');
+const CommentsModel = require('../models/comments.js');  
 const ShareModel = require('../models/shares.js');
 
 // Create a post 
-exports.createUpdatePostLikes = async(req, res) => {
+exports.createPostLikes = async(req, res) => {
     console.log('insiididideineininineeiweijwiejwijewjewjeiw');
     console.log(req.body);
+    console.log(req.params);
     try {
-            const post_data_object = new PostModel({
-                user_id: req.body.user_id,
-                community_id: req.body.community_id,
-                description:req.body.description,
-                location:req.body.location,
-                post_media: [{media_url: "url", tags: [{user_name: "dmfskfsdkmfs", user_id: "12", place_name: "Nagai"}] }],
+            const likes_data_object = new LikesModel({
+                post_id: req.params.id,
+                liked_by:req.body.liked_by,
+                likes_count: req.body.liked_by.length,
             });
  
              // Save 
-            await post_data_object.save()
+            await likes_data_object.save()
              
-            res.status(201).send({ post_data_object })
+            res.status(201).send({ likes_data_object })
     } catch (error) {
             res.status(400).send(error)
     }
 }; 
 
 
-// Update or edit information about user
-exports.createUpdateComentsLikes = (req, res) => {
-    console.log('insiide update valuuuuueeeeeeeeeeee');
-    console.log(req.params);
-    console.log(req.query);
+// Update post likes 
+exports.updatePostLikes = async(req, res) => {
+    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
     console.log(req.body);
-    PostModel.findByIdAndUpdate(req.query.id, {$set:{
-        user_id: req.body.user_id,
-        community_id: req.body.community_id,
-        description:req.body.description,
-        location:req.body.location,
-        post_media: [{media_url: "url", tags: [{user_name: "dmfskfsdkmfs", user_id: "12", place_name: "Nagai"}] }],
-    }}, {new: true})
-    .then(data => {
-        if(!data) {
-            return res.status(404).send({
-                message: "Record not found with id " + req.params.id
+    console.log(req.params);
+    var query = { post_id: req.params.id };
+    var values = { $set: {liked_by:req.body.liked_by, likes_count: req.body.liked_by.length } };
+    LikesModel.updateOne(query, values, function(err, response) {
+        if (err) throw res.status(401).send(err);;
+        console.log("1 document updated");
+        res.status(201).send({ "status": "Successfuly updated likes" })
+    });   
+}; 
+
+
+// Update or edit information about user
+exports.createCommentsLikes = async(req, res) => {
+    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
+    console.log(req.body);
+    console.log('///////////////////');
+    console.log(req.params);
+    try {
+            const likes_data_object = new LikesModel({
+                post_id: req.params.id,
+                comment_id: req.params.comment_id,
+                parent_comment_id:req.body.parent_comment_id,
+                liked_by:req.body.liked_by,
+                likes_count: req.body.liked_by.length,
             });
-        }
-        res.send(data);
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "Record not found with id " + req.params.id
-            });                
-        }
-        return res.status(500).send({
-            message: "Error updating record with id " + req.params.festiveId
-        });
-    });
+ 
+            // Save   
+            await likes_data_object.save()
+             
+            res.status(201).send({ likes_data_object })
+    } catch (error) {
+            res.status(400).send(error)
+    }
+};
+
+// Update or edit information about user
+exports.updateCommentsLikes = async(req, res) => {
+    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
+    console.log(req.body);
+    console.log(req.params);
+    var query = { post_id: req.params.id, comment_id: req.params.comment_id };
+    var values = { $set: {liked_by:req.body.liked_by, likes_count: req.body.liked_by.length } };
+    LikesModel.updateOne(query, values, function(err, response) {
+        if (err) throw res.status(401).send(err);;
+        console.log("1 document updated");
+        res.status(201).send({ "status": "Successfuly updated likes" })
+    });   
 };
 
 
@@ -65,8 +85,8 @@ exports.getPostLikes = async(req, res) => {
     console.log(req.query);
     console.log(req.params);
     try {
-        const post_data_object = await PostModel.findById(req.params.id);
-        res.status(201).send({ post_data_object })        
+        const likes_data_object = await LikesModel.findById(req.params.id);
+        res.status(201).send({ likes_data_object })        
     } catch (error) {
         res.status(400).send(error)
     }
@@ -79,7 +99,7 @@ exports.getCommentsLikes = async(req, res) => {
     console.log(req.query);
     console.log(req.params);
     try {
-        const post_data_object = await PostModel.findById(req.params.id);
+        const post_data_object = await LikesModel.findById(req.params.id);
         res.status(201).send({ post_data_object })        
     } catch (error) {
         res.status(400).send(error)

@@ -61,3 +61,26 @@ module.exports = mongoose.model('post', post_schema);
 
 
 */
+
+
+
+/*
+
+    {
+        "comment": {
+            "post_id": "5678",
+            "media": ["https://www.facebook.com/", "https://www.google.com/"],
+            "parent_comment_id": "5d9cc2d820633f9202fdfd83",
+            "user_id": "5d965ff79ca33c5703f16451",
+            "comment_text": "Hi Hi 888 Comment",
+            "tags": [{
+                "user_id": "123",
+                "text": ""
+            }, {
+                "user_id": "456",
+                "text": ""
+            }]
+        }
+    }
+
+*/
