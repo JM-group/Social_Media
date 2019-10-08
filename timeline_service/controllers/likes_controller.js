@@ -5,9 +5,6 @@ const ShareModel = require('../models/shares.js');
 
 // Create a post 
 exports.createPostLikes = async(req, res) => {
-    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
-    console.log(req.body);
-    console.log(req.params);
     try {
             const likes_data_object = new LikesModel({
                 post_id: req.params.id,
@@ -27,14 +24,10 @@ exports.createPostLikes = async(req, res) => {
 
 // Update post likes 
 exports.updatePostLikes = async(req, res) => {
-    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
-    console.log(req.body);
-    console.log(req.params);
     var query = { post_id: req.params.id };
     var values = { $set: {liked_by:req.body.liked_by, likes_count: req.body.liked_by.length } };
     LikesModel.updateOne(query, values, function(err, response) {
         if (err) throw res.status(401).send(err);;
-        console.log("1 document updated");
         res.status(201).send({ "status": "Successfuly updated likes" })
     });   
 }; 
@@ -42,10 +35,6 @@ exports.updatePostLikes = async(req, res) => {
 
 // Update or edit information about user
 exports.createCommentsLikes = async(req, res) => {
-    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
-    console.log(req.body);
-    console.log('///////////////////');
-    console.log(req.params);
     try {
             const likes_data_object = new LikesModel({
                 post_id: req.params.id,
@@ -66,9 +55,6 @@ exports.createCommentsLikes = async(req, res) => {
 
 // Update or edit information about user
 exports.updateCommentsLikes = async(req, res) => {
-    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
-    console.log(req.body);
-    console.log(req.params);
     var query = { post_id: req.params.id, comment_id: req.params.comment_id };
     var values = { $set: {liked_by:req.body.liked_by, likes_count: req.body.liked_by.length } };
     LikesModel.updateOne(query, values, function(err, response) {
@@ -81,9 +67,6 @@ exports.updateCommentsLikes = async(req, res) => {
 
 //Get Post Object
 exports.getPostLikes = async(req, res) => {
-    console.log('inside geeetttttttttt valueeeeeeee');
-    console.log(req.query);
-    console.log(req.params);
     try {
         const likes_data_object = await LikesModel.findById(req.params.id);
         res.status(201).send({ likes_data_object })        
@@ -95,9 +78,6 @@ exports.getPostLikes = async(req, res) => {
 
 //Get Post Object
 exports.getCommentsLikes = async(req, res) => {
-    console.log('inside geeetttttttttt valueeeeeeee');
-    console.log(req.query);
-    console.log(req.params);
     try {
         const post_data_object = await LikesModel.findById(req.params.id);
         res.status(201).send({ post_data_object })        

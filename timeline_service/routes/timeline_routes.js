@@ -2,6 +2,7 @@ module.exports = (app) => {
     const post = require('../controllers/post_controller.js');
     const likes = require('../controllers/likes_controller.js');
     const comments = require('../controllers/comments_controller.js');
+    const share = require('../controllers/share_controller.js');
 
     // Create a new Record / Signup
     app.post('/post', post.create);
@@ -47,5 +48,12 @@ module.exports = (app) => {
     app.get('/likes/post/:id', likes.getPostLikes);
 
     // Delete a Note with festiveId
-    app.get('/likes/comment/:id', likes.getCommentsLikes);   
+    app.get('/likes/comment/:id', likes.getCommentsLikes); 
+    
+    //Share posts routes
+    //Create share post
+    app.post('/share', share.create);
+
+    //Update share post
+    app.post('/share/:id', share.update);
 }
