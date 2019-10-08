@@ -98,6 +98,7 @@ exports.delete = async(req, res) => {
     const filter = {$or:[{_id: req.params.id},{parent_comment_id:req.params.id}]};
     var parent_comnt_id = null
     var err_status = false;
+    var comment_post_id = null;
     try {
         //await CommentsModel.findByIdAndDelete(req.params.id);
         await CommentsModel.find(filter, function (err, data) {
@@ -109,14 +110,24 @@ exports.delete = async(req, res) => {
                 res.status(201).send({"status": "No record found"});
             } else {
                 parent_comnt_id = data[0].parent_comment_id;
-                 CommentsModel.deleteMany(filter, function (err, r) {
+                comment_post_id = data[0].post_id;
+                CommentsModel.deleteMany(filter, function (err, r) {
                     if (err) {
                         err_status = true
                         res.status(401).send(err);
                     }
                 }); 
             }
-        }); 
+        });
+        if (comment_post_id != null || comment_post_id != undefined) {
+            var like_search_query = {post_id: comment_post_id};
+            LikesModel.deleteMany(like_search_query, function (err, r) {
+                if (err) {
+                    err_status = true
+                    res.status(401).send(err);
+                }
+            });
+        } 
         if (parent_comnt_id != "0" && parent_comnt_id != null && err_status == false) {
             await CommentsModel.updateOne(
                 // find record with name "MyServer"
