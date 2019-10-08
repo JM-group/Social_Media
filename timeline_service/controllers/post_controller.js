@@ -78,9 +78,27 @@ exports.delete = async(req, res) => {
     console.log('inside geeetttttttttt valueeeeeeee');
     console.log(req.query);
     console.log(req.params);
+    var query = { post_id: req.params.id };
+    var err_status = false;
     try {
         const post_data_object = await PostModel.findByIdAndDelete(req.params.id);
-        res.status(201).send({ "status": "Successfuly deleted post" })        
+        const comments_data_object = await CommentsModel.deleteMany(query, function (err, r) {
+            if (err) {
+                err_status = true
+                res.status(401).send(err);
+            }
+        }); 
+        const likes_data_object = LikesModel.deleteMany(query, function (err, r) {
+            if (err) {
+                err_status = true
+                res.status(401).send(err);
+            }
+        });
+        if (err_status == false) {
+            res.status(201).send({ "status": "Successfuly deleted post" })        
+        } else {
+            res.status(400).send({ "status": "Error happened in deleting post" })                    
+        }    
     } catch (error) {
         res.status(400).send(error)
     }

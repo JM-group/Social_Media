@@ -7,14 +7,15 @@ const ShareModel = require('../models/shares.js');
 exports.create = async(req, res) => {
     console.log('insiididideineininineeiweijwiejwijewjewjeiw');
     console.log(req.params);
+    console.log(req.body.comment.user_id)
     try {
             console.log('iside try blocccckkk');
             const comments_data_object = new CommentsModel({
                 used_id: req.body.comment.user_id,
-                post_id: req.params.post_id,
+                post_id: req.body.comment.post_id,
                 media:req.body.comment.media,
                 tags:req.body.comment.tags,
-                parent_comment_id: req.params.parent_comment_id,
+                parent_comment_id: req.body.comment.parent_comment_id,
                 comment_text: req.body.comment.comment_text
             });
             
@@ -24,15 +25,15 @@ exports.create = async(req, res) => {
             console.log('cccccccccccccccccccccccccccc after save');
             
             console.log('parent comment check value eisssssss == ');
-            console.log(req.params.parent_comment_id);
+            console.log(req.body.comment.parent_comment_id);
             console.log("/////////");
             console.log(comments_data_object);
 
-            if (req.params.parent_comment_id != "0") {
+            if (req.body.comment.parent_comment_id != "0") {
                 console.log('coming inside hereeeeeee');
                 await CommentsModel.updateOne(
                     // find record with name "MyServer"
-                    { post_id: req.params.post_id, _id: req.params.parent_comment_id },
+                    { post_id: req.body.comment.post_id, _id: req.body.comment.parent_comment_id },
                     // increment it's property called "ran" by 1
                     { $inc: { replies_count: 1 } }
                 );

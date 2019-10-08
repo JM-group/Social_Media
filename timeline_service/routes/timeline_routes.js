@@ -15,13 +15,14 @@ module.exports = (app) => {
     // Delete a Note with festiveId
     app.delete('/post/:id', post.delete);   
 
-    // Post comments for post
-    app.post('/comments/:post_id/:parent_comment_id/', comments.create);
+    // Post comments for posts
+    app.post('/comments/', comments.create);
+    //app.post('/comments/:post_id/:parent_comment_id/', comments.create);
 
-    // Update user details
+    // Update comment data 
     app.put('/comments/:id', comments.update)
 
-    // Get user details and followers information
+    // Get specific comment details or subcomments
     app.get('/comments/:post_id/:parent_id', comments.get);
 
     // Delete a Note with festiveId
