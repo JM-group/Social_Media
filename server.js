@@ -49,6 +49,17 @@ app.get('/', (req, res) => {
     res.send('NodeJS API')
 });
 
+const schema = new GraphQLSchema({
+    query: new GraphQLObjectType({
+        name: "Query"
+    })
+})
+
+app.use("/graphql", ExpressGraphQL({
+    schema: null,
+    graphiql: true
+}));
+
 require('./user_service/routes/user_routes.js')(app);
 require('./timeline_service/routes/timeline_routes.js')(app);
 
