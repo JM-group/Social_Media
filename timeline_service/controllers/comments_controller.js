@@ -53,13 +53,11 @@ exports.update = (req, res) => {
     console.log(req.params);
     console.log(req.query);
     console.log(req.body);
-    PostModel.findByIdAndUpdate(req.query.id, {$set:{
-        user_id: req.body.user_id,
-        community_id: req.body.community_id,
-        description:req.body.description,
-        location:req.body.location,
-        post_media: [{media_url: "url", tags: [{user_name: "dmfskfsdkmfs", user_id: "12", place_name: "Nagai"}] }],
-    }}, {new: true})
+    CommentsModel.findByIdAndUpdate(req.params.id, {$set:{
+        media:req.body.comment.media,
+        tags:req.body.comment.tags,
+        comment_text: req.body.comment.comment_text,
+    }})
     .then(data => {
         if(!data) {
             return res.status(404).send({
@@ -74,7 +72,7 @@ exports.update = (req, res) => {
             });                
         }
         return res.status(500).send({
-            message: "Error updating record with id " + req.params.festiveId
+            message: "Error updating record with id " + req.params.id
         });
     });
 };
@@ -86,8 +84,8 @@ exports.get = async(req, res) => {
     console.log(req.query);
     console.log(req.params);
     try {
-        const post_data_object = await PostModel.findById(req.params.id);
-        res.status(201).send({ post_data_object })        
+        const comments_data_object = await CommentsModel.findById(req.params.id);
+        res.status(201).send({ comments_data_object })        
     } catch (error) {
         res.status(400).send(error)
     }
@@ -95,20 +93,45 @@ exports.get = async(req, res) => {
 
 
 //Delete Post Object
-exports.deletePostComment = async(req, res) => {
-    console.log('inside geeetttttttttt valueeeeeeee');
-    console.log(req.query);
-    console.log(req.params);
+exports.delete = async(req, res) => {
+    const filter = {$or:[{_id: req.params.id},{parent_comment_id:req.params.id}]};
+    var parent_comnt_id = null
+    var err_status = false;
     try {
-        const post_data_object = await PostModel.findByIdAndDelete(req.params.id);
-        res.status(201).send({ "status": "Successfuly deleted post" })        
+        //await CommentsModel.findByIdAndDelete(req.params.id);
+        await CommentsModel.find(filter, function (err, data) {
+            if (err) {
+                err_status = true
+                res.status(401).send(err);
+            } else if (data.length == 0) {
+                err_status = true
+                res.status(201).send({"status": "No record found"});
+            } else {
+                parent_comnt_id = data[0].parent_comment_id;
+                 CommentsModel.deleteMany(filter, function (err, r) {
+                    if (err) {
+                        err_status = true
+                        res.status(401).send(err);
+                    }
+                }); 
+            }
+        }); 
+        if (parent_comnt_id != "0" && parent_comnt_id != null && err_status == false) {
+            await CommentsModel.updateOne(
+                // find record with name "MyServer"
+                { _id: parent_comnt_id },
+                // increment it's property called "ran" by 1
+                { $inc: { "replies_count": -1 } }
+            );
+        }
+        res.status(201).send({ "status": "Successfuly deleted comments" })        
     } catch (error) {
         res.status(400).send(error)
     }
 };  
 
 //Delete Post Object
-exports.delete = async(req, res) => {
+/*exports.delete = async(req, res) => {
     console.log('inside geeetttttttttt valueeeeeeee');
     console.log(req.query);
     console.log(req.params);
@@ -118,4 +141,4 @@ exports.delete = async(req, res) => {
     } catch (error) {
         res.status(400).send(error)
     }
-};  
+};  */

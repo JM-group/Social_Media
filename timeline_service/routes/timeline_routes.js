@@ -19,16 +19,16 @@ module.exports = (app) => {
     app.post('/comments/:post_id/:parent_comment_id/', comments.create);
 
     // Update user details
-    app.put('/comments/:post_id/:comment_id', comments.update)
+    app.put('/comments/:id', comments.update)
 
     // Get user details and followers information
     app.get('/comments/:post_id/:parent_id', comments.get);
 
     // Delete a Note with festiveId
-    app.delete('/comments/:post_id', comments.deletePostComment);       
+   // app.delete('/comments/:post_id', comments.deletePostComment);       
 
     // Delete a Note with festiveId
-    app.delete('/comments/:post_id/comment_id', comments.delete);       
+    app.delete('/comments/:id', comments.delete);       
 
     // Create a entry for post likes
     app.post('/like/post/:id', like.createUpdatePostLikes);
