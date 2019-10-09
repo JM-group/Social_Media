@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 var async = require("async");
-const ExpressGraphQL = require("express-graphql");
+const graphqlHTTP = require("express-graphql");
 const {
     GraphQLID,
     GraphQLString,
@@ -11,8 +11,11 @@ const {
     GraphQLSchema
 } = require("graphql");
 
+const cors = require("cors");
 // create express app
 const app = express();
+
+app.use('*', cors());
 
 // parse application/json
 app.use(bodyParser.json({}))
@@ -22,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 
 app.use(bodyParser.raw({}))
+
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -49,14 +53,11 @@ app.get('/', (req, res) => {
     res.send('NodeJS API')
 });
 
-const schema = new GraphQLSchema({
-    query: new GraphQLObjectType({
-        name: "Query"
-    })
-})
+const timelineSchema = require('./timeline_service/graphql/index').timelineSchema;
 
-app.use("/graphql", ExpressGraphQL({
-    schema: null,
+app.use("/graphql", cors(), graphqlHTTP({
+    schema: timelineSchema,
+    rootValue: global,
     graphiql: true
 }));
 
