@@ -27,17 +27,19 @@ exports.update = async(req, res) => {
     console.log("inside update enfksdnfsfsnfsnfnsdfjnsnfsnfsnjdfsd");
     console.log(req.body.shared_users_id.length);
     var arr_len = req.body.shared_users_id.length;
-        await ShareModel.update(
+        await ShareModel.updateOne(
             // find record with name "MyServer"
             { post_id: req.params.post_id },
-            // Concat new values into exising array
-            { $inc: { count: arr_len } },
-            { $push: { shared_users_id: { $each: req.body.shared_users_id }}},   
-            function(err,numAffected) {
-                if (err)  { //throw err;
-                    res.status(400).send(err);    
-                };
-            }
-        );
+            // Concat new values into exising array and increase count value
+            { 
+                $inc: { 
+                    count: arr_len 
+                }, 
+                $push: { shared_users_id: { 
+                            $each: req.body.shared_users_id 
+                        }
+                }
+            }, 
+        ).exec();
         res.status(201).send({ 'status': 'Successfully updated' });
 };
