@@ -6,8 +6,15 @@ const post_schema = mongoose.Schema({
     post_media: Array,
     community_id: String,
     location: Array,
+    likes_count: Number,
+    comments_count: Number,
+    ingredients:[
+        {type: mongoose.Schema.Types.ObjectId, ref: 'comments'}
+    ]
 }, {
-    timestamps: true
+    timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
 });
 
 post_schema.virtual('likes', {

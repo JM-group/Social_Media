@@ -55,5 +55,5 @@ module.exports = (app) => {
     app.post('/share', share.create);
 
     //Update share post
-    app.post('/share/:id', share.update);
+    app.put('/share/:post_id', share.update);
 }

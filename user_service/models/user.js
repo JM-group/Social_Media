@@ -13,6 +13,7 @@ const user_schema = mongoose.Schema({
     refresh_token: String,
     first_name: String,
     last_name: String,
+    display_name: String,
     gender: String,
     age: Number,
     profile_pic: String,

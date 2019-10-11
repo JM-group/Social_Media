@@ -8,7 +8,9 @@ const comments_schema = mongoose.Schema({
     comment_text: String,
     media: Array,
     tags: Array,
-    replies_count: Number
+    replies_count: Number,
+    likes_count: Number,
+    share_count: Number
 }, {
     timestamps: true
 });
@@ -16,18 +18,9 @@ const comments_schema = mongoose.Schema({
 comments_schema.virtual('likes', {
     ref: 'likes', 
     localField: '_id',
-    foreignField: 'post_id', 
+    foreignField: 'comment_id', 
     justOne: false
 });
-
-//Need to study more about shares use cases.
-/*
-post_schema.virtual('shares', {
-    ref: 'shares', 
-    localField: '_id',
-    foreignField: 'post_id', 
-    justOne: false
-});  */
 
 module.exports = mongoose.model('comments', comments_schema);
 

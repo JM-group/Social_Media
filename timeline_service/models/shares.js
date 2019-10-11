@@ -10,3 +10,14 @@ const shares_schema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('shares', shares_schema);
+ 
+
+/*
+    JSON to post shares
+
+    {
+        id: "",
+        shared_users_id: [12, 13]
+    }
+
+*/

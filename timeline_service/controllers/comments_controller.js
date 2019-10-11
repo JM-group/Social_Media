@@ -5,11 +5,7 @@ const ShareModel = require('../models/shares.js');
 
 // Create a post 
 exports.create = async(req, res) => {
-    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
-    console.log(req.params);
-    console.log(req.body.comment.user_id)
     try {
-            console.log('iside try blocccckkk');
             const comments_data_object = new CommentsModel({
                 used_id: req.body.comment.user_id,
                 post_id: req.body.comment.post_id,
@@ -19,26 +15,23 @@ exports.create = async(req, res) => {
                 comment_text: req.body.comment.comment_text
             });
             
-            console.log('bbbbbbbbbbbbbbbbbbbbbbbbbefore save');
              // Save 
             await comments_data_object.save()
-            console.log('cccccccccccccccccccccccccccc after save');
-            
-            console.log('parent comment check value eisssssss == ');
-            console.log(req.body.comment.parent_comment_id);
-            console.log("/////////");
-            console.log(comments_data_object);
 
             if (req.body.comment.parent_comment_id != "0") {
                 console.log('coming inside hereeeeeee');
                 await CommentsModel.updateOne(
-                    // find record with name "MyServer"
                     { post_id: req.body.comment.post_id, _id: req.body.comment.parent_comment_id },
                     // increment it's property called "ran" by 1
                     { $inc: { replies_count: 1 } }
                 );
                 res.status(201).send({ comments_data_object })                
             } else {
+                await PostModel.updateOne(
+                    { _id: req.body.comment.post_id },
+                    // increment it's property called "ran" by 1
+                    { $inc: { comments_count: 1 } }
+                );
                 res.status(201).send({ comments_data_object })
             }
 
@@ -50,10 +43,6 @@ exports.create = async(req, res) => {
 
 // Update or edit information about user
 exports.update = (req, res) => {
-    console.log('insiide update valuuuuueeeeeeeeeeee');
-    console.log(req.params);
-    console.log(req.query);
-    console.log(req.body);
     CommentsModel.findByIdAndUpdate(req.params.id, {$set:{
         media:req.body.comment.media,
         tags:req.body.comment.tags,

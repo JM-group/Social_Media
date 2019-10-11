@@ -5,6 +5,7 @@ var GraphQLString = require('graphql').GraphQLString;
 var LikesModel = require('../../models/likes.js');
 var postLikesType = require('../types/timeline').postLikesType;
 var GraphQLNumber = require('graphql').GraphQLInt;
+var PostData = require('./posts.js');
 
 // Query
 exports.postLikesList = new GraphQLObjectType({
@@ -48,7 +49,11 @@ exports.postLikesList = new GraphQLObjectType({
           }
           return likes
         }
-      }
+      },
+      post_initial_data: PostData.post_initial_fetch_datas,
+      post_comments: PostData.post_comments,
+      sub_comments: PostData.post_sub_comments,
+      liked_users: PostData.liked_users
     }
   }
 }); 
