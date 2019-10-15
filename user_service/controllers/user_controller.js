@@ -24,6 +24,8 @@ exports.create = async(req, res) => {
            const token = await user_data_object.generateAuthToken()
             res.status(201).send({ user_data_object })
     } catch (error) {
+        console.log('33333333333333333333333333333333333');
+        console.log(error);
         res.status(400).send(error)
     }    
 };
@@ -45,10 +47,10 @@ exports.create = async(req, res) => {
 */
 
 exports.login = async(req, res) => {
-    const user = await UserModel.findByCredentials(req.body.email);
-    if (!user) {
+    var user_data_object = await UserModel.findByCredentials(req.body.email);
+    if (!user_data_object) {
         console.log('inside first ifff');
-        const user_data_object = new UserModel({
+        user_data_object = new UserModel({
             email: req.body.email,
             ph_number: req.body.ph_number,
             auth_token:req.body.auth_token,
@@ -57,22 +59,27 @@ exports.login = async(req, res) => {
             last_name:req.body.last_name,
             gender:req.body.gender,
             age:req.body.age,
+            profile: req.body.profile_pic,
+            display_name: req.body.display_name
         });
 
-        // Save 
-        user_data_object.save().then(data => {
+        await user_data_object.save()
+        const token = await user_data_object.generateAuthToken()
+        res.status(201).send({ user_data_object })
+        /*    .then(data => {
             res.send(data);
         }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the record."
             });
-        });
+        });  */
     } else {
         console.log('inside 222333');
-        user.status = true;
-        const token = await user.generateAuthToken('login');
+        user_data_object.status = true;
+        const token = await user_data_object.generateAuthToken();
         console.log(token);
-        res.send({ user, token });
+        res.status(201).send({ user_data_object })
+        // res.send({ user, token });
     }
 }
 
