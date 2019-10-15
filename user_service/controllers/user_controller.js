@@ -87,31 +87,29 @@ exports.login = async(req, res) => {
 
 // Update or edit information about user
 exports.update = (req, res) => {
-    UserModel.findByIdAndUpdate(req.params.id, {$set:{
-        email: req.body.email,
+   // UserModel.find({email: req.params.id}, {$set:{
+    req.user.updateOne({$set:{
         ph_number: req.body.ph_number,
-        auth_token:req.body.auth_token,
-        refresh_token:req.body.refresh_token,
         first_name:req.body.first_name,
         last_name:req.body.last_name,
         gender:req.body.gender,
-        age:req.body.age
-    }}, {new: true})
-    .then(data => {
+        age:req.body.age,
+        display_name: req.body.display_name
+    }}).then(data => {
         if(!data) {
             return res.status(404).send({
-                message: "Record not found with id " + req.params.festiveId
+                message: "Record not found with id " + req.params.id
             });
         }
-        res.send(data);
+        res.send(req.user);
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Record not found with id " + req.params.festiveId
+                message: "Record not found with id " + req.params.id
             });                
         }
         return res.status(500).send({
-            message: "Error updating record with id " + req.params.festiveId
+            message: "Error updating record with id " + req.params.id
         });
     });
 };

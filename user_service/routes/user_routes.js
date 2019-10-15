@@ -8,7 +8,7 @@ module.exports = (app) => {
     app.post('/user', user.create);
 
     // Update user details
-    app.put('/user/:id', user.update);
+    app.put('/user/:id', auth, user.update);
 
     // Get user details and followers information
     app.get('/user/:id', auth, user.get);

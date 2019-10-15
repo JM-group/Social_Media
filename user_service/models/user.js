@@ -32,6 +32,7 @@ user_schema.methods.generateAuthToken = async function() {
     // Generate an auth token for the user
     console.log('entering generate auth method inside here');
     const user = this;
+    console.log(user._id);
     const token = jwt.sign({_id: user._id}, envFile['secret'])
     console.log('token valueeeee is ==', token);
     user.tokens = user.tokens.concat({token})
