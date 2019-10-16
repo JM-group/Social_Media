@@ -143,14 +143,15 @@ exports.delete = (req, res) => {
 
 //Logout user form his/her device
 exports.logout = async(req, res) => {
-    const user = await UserModel.findByCredentials(req.body.email);
+    //const user = await UserModel.findByCredentials(req.body.email);
+    const user = req.user;
     if (user) {
         try {
             user.tokens = user.tokens.filter((token) => {
-                return token.token != req.body.token
+                return token.token != req.params.id
             })
-            await user.save({message: 'Successfully Logged out'})
-            res.send()
+            await user.save({status: 0})
+            res.send({'message': 'Successfully logged out'});
         } catch (error) {
             res.status(500).send(error)
         }
