@@ -94,12 +94,7 @@ exports.delete = (req, res) => {
 // Unfollow user after following 
 
 exports.unfollow = async(req, res) => {
-    console.log('inside unfollow method going on hereee value coming thereeeeeeeee');
-    console.log(req.user);
-    console.log('theennnnnnnnnnnneeeeeeeeeeeeeee');
-    console.log(req.body);
     try {
-            console.log("11111111111111111");
             await FollowedUsersModel.findOneAndUpdate(
                 {user : req.user.id }, 
                 {
@@ -108,7 +103,6 @@ exports.unfollow = async(req, res) => {
 
             });
 
-            console.log("22222222@22222222@22222222@22222222@22222222@");    
             await FollowingUsersModel.findOneAndUpdate(
                 {user: req.body.removing_user_id},
                 {
@@ -116,7 +110,6 @@ exports.unfollow = async(req, res) => {
                 }        
             )  
             
-            console.log("before final syntac goiggnggggngngng on hereeeeeeeeeee");
         res.status(201).send({'message': 'success'});
     } catch (error) {
         res.status(400).send(error)
