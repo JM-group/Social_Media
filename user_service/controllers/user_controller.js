@@ -2,6 +2,9 @@ const UserModel = require('../models/user.js');
 const UserDetailsModel = require('../models/user_details.js')
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth.js');
+const FollowStatusModel = require('../models/follow_status.js')
+const FollowedUsersModel = require('../models/followed_users')
+const FollowingUsersModel = require('../models/following_users')
 
 // Create and Save a new User
 exports.create = async(req, res) => {
@@ -21,8 +24,17 @@ exports.create = async(req, res) => {
             // Save 
             await user_data_object.save()
             
-           const token = await user_data_object.generateAuthToken()
-            res.status(201).send({ user_data_object })
+            await new FollowedUsersModel({
+                user: user_data_object,
+               // friends: follow_status_model.recipient._id
+            }).save()
+
+            await new FollowingUsersModel({
+                user: user_data_object,
+            }).save()
+
+            const token = await user_data_object.generateAuthToken()
+           res.status(201).send({ user_data_object })
     } catch (error) {
         console.log('33333333333333333333333333333333333');
         console.log(error);
@@ -116,6 +128,7 @@ exports.update = (req, res) => {
 
 // Get details about user
 exports.get = (request, response) => {
+    console.log('inside repsponse vlalalalallalalallllllllllllll');
     response.send(request.user)
 };
 

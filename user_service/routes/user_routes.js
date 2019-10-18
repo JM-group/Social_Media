@@ -1,5 +1,6 @@
 module.exports = (app) => {
     const user = require('../controllers/user_controller.js');
+    const follow = require('../controllers/follow_controller.js');    
     const auth = require('../middleware/auth.js');
 
     // Create a new Record / Signup
@@ -20,5 +21,15 @@ module.exports = (app) => {
 
     // Delete a Note with festiveId
     app.delete('/user/:id', user.delete);
+
+
+    app.post('/follow/:id', auth, follow.create)
    
+    app.put('/follow/:id', auth, follow.update)
+
+    app.get('/follow/:id', auth, follow.get)
+
+    app.delete('/follow/:id', auth, follow.delete)
+
+    app.put('/unfollow/:id', auth, follow.unfollow)
 }

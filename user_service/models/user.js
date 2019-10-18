@@ -40,14 +40,6 @@ user_schema.methods.generateAuthToken = async function() {
     return token
 }  
 
-/* user_schema.pre('save', async function (next) {
-    // Hash the password before saving the user model
-    const user = this, JWT_KEY = 'lorem'
-    const token = jwt.sign({_id: user}, JWT_KEY)
-    user.tokens = user.tokens.concat({token})
-    next()
-}) */
-
 //    return token
 user_schema.statics.findByCredentials = async (email, token) => {
     // Search for a user by email and password.
@@ -59,29 +51,12 @@ user_schema.statics.findByCredentials = async (email, token) => {
 }
 
 
-user_schema.virtual('follow', {
-    ref: 'follow', 
+user_schema.virtual('follow_status', {
+    ref: 'follow_status', 
     localField: '_id',
-    foreignField: 'user_id', 
+    foreignField: 'requestor_id', 
     justOne: false
 });
 
 const User = mongoose.model('user', user_schema);
 module.exports = User
-
-
-/*
-JSON to create user
-
-{
-    "email": "mas11@g2ail.com",
-    "ph_number": 16478037288,
-    "auth_token": "156a",
-    "refresh_token": "5679",
-    "first_name": "Mohamed",
-    "last_name": "12355Ashif",
-    "gender": "Male",
-    "age": 22
-}
-
-*/
