@@ -54,7 +54,8 @@ app.get('/', (req, res) => {
     res.send('NodeJS API')
 });
 
-const timelineSchema = require('./timeline_service/graphql/index').timelineSchema;
+//const timelineSchema = require('./timeline_service/graphql/index').timelineSchema;
+const timelineSchema = require('./user_service/graphql/index').userServiceSchema;
 
 app.use("/graphql", cors(), graphqlHTTP({
     schema: timelineSchema,
