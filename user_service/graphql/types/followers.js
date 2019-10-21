@@ -46,12 +46,26 @@ const userContentType = new GraphQLObjectType({
 });
 
 
-
-      //type: userContentType,
-        //  resolve: function (root, params) {
-        //    return root.likes[0] 
-        //}
-
-
-        //      const result = input.map(userPayload => createUser(userPayload));
-      //        return result;
+exports.userRequestStatusContent = new GraphQLObjectType({
+  name: 'request_status',
+  fields: function () {
+    return {
+      _id: {type: GraphQLString},
+      requestor: {
+        type: userContentType,
+        resolve: function async(root, params) {
+          return root.requestor 
+        }
+      },
+      recipient: {
+        type: userContentType,
+        resolve: function(root, params) {
+          return root.recipient 
+        } 
+      },
+      status: {
+        type: GraphQLString,      
+      } 
+    }
+  }
+});

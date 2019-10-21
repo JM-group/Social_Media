@@ -77,3 +77,33 @@ exports.user_following = {
   }
 }
 
+
+
+exports.request_status = {
+  type: new GraphQLList(FollowerQueryType.userRequestStatusContent),
+  args: {
+      _id: {
+        name: '_id',
+        type: new GraphQLNonNull(GraphQLString)
+      }
+  },
+  resolve: async function (root, params) {
+    const filter_query = {'requestor': params._id};
+    var response_val = '', user_val = '', temp_json = {};
+    const user_data = await UserModel.find(filter_query).then(respo => {
+      user_val = respo;
+    })
+    const post_data = await FollowStatusModel.find({user: user_val._id}).populate('requestor').populate('recipient').then(respo => {
+    //  console.log('inside respo value going on isssssssssssrrrrrr');
+    //  console.log(respo);
+      response_val = respo;
+    });
+    console.log("response value finally isss sssssssssssssssssssssssssssssssss");
+    console.log(response_val);
+    if (!response_val || !response_val[0]) {
+      throw new Error('Error')
+    }
+    return response_val
+  }
+}
+

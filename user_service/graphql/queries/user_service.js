@@ -18,36 +18,9 @@ exports.userServiceQueryList = new GraphQLObjectType({
     return {
       followers_data: FollowersQuery.user_followers,
       following_data: FollowersQuery.user_following,
+      request_status: FollowersQuery.request_status
     }
   }
 }); 
 
 
-
-/*
-
-exports.postLikesList = new GraphQLObjectType({
-  name: "RootQueryType",
-  fields: {
-    hello: {
-      type: GraphQLString,
-      resolve() {
-        return "world";
-      }
-    },
-    person: {
-      type: GraphQLString,
-      resolve() {
-        return "world2";
-      }
-    },
-    people: {
-      type: GraphQLString,
-      resolve() {
-        return "world3";
-      }
-    }
-  }
-});
-
-*/
