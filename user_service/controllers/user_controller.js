@@ -9,7 +9,6 @@ const SanitizeHelpers = require('../helpers/sanitizers.js')
 const fs = require("fs")
 const path = require("path");
 const multer = require("multer");
-console.log(FollowedUsersModel);
   
 // SET STORAGE
 var storage = multer.diskStorage({
@@ -219,16 +218,11 @@ exports.logout_all = async(req, res) => {
 
 exports.upload_images = async(req, res) => {
     upload(req, res, function (err) {
-            console.log("insie upload start function hereeee");
-            console.log(err);
             if (err instanceof multer.MulterError) {
                 return res.status(500).json(err)
             } else if (err) {
                 return res.status(500).json(err)
             }
-            console.log("/////////");
-            console.log(req.file);
-            console.log("req profile pic value going on here and there issss");
             req.user.profile_pic = req.file.path
             req.user.save()
             return res.status(200).send(req.file)
