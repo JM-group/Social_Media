@@ -23,7 +23,7 @@ module.exports = (app) => {
     app.delete('/user/:id', user.delete);
 
     //Upload profile pic
-    app.post('/upload_profile_pic/:id', user.upload_images);
+    app.post('/upload_profile_pic/:id', auth, user.upload_images);
 
 
     app.post('/follow/:id', auth, follow.create)

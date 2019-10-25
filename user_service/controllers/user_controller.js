@@ -5,24 +5,33 @@ const auth = require('../middleware/auth.js');
 const FollowStatusModel = require('../models/follow_status.js')
 const FollowedUsersModel = require('../models/followed_users')
 const FollowingUsersModel = require('../models/following_users')
+const SanitizeHelpers = require('../helpers/sanitizers.js')
 const fs = require("fs")
 const path = require("path");
 const multer = require("multer");
-multer({
-    limits: { fieldSize: 2 * 1024 * 1024 }
-  })
+console.log(FollowedUsersModel);
   
 // SET STORAGE
 var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    /* destination: function (req, file, cb) {
       cb(null, 'uploads')
-    },
+    }, */
+    destination: 'uploads',
     filename: function (req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now())
     }
 })
-var upload = multer({ storage: storage }).single('file')
 
+const upload = multer({
+    storage: storage, 
+    limits: {
+        fileSize: { fieldSize: 2 * 1024 * 1024 }
+    },
+    fileFilter: function (req, file, cb) {
+        //sanitizeFile(file, cb);
+        SanitizeHelpers(file, cb);
+    }
+}).single('file')
 
 // Create and Save a new User
 exports.create = async(req, res) => {
@@ -209,23 +218,20 @@ exports.logout_all = async(req, res) => {
 
 
 exports.upload_images = async(req, res) => {
-    console.log("inside upload images here going onnnnnnnnnnnnnnnnnnn");
-    console.log(req)
-    console.log(req.file);
-    console.log(req.body);
-    console.log("value going on heree");
-
     upload(req, res, function (err) {
             console.log("insie upload start function hereeee");
             console.log(err);
-           if (err instanceof multer.MulterError) {
-               return res.status(500).json(err)
-           } else if (err) {
-               return res.status(500).json(err)
-           }
-           console.log("/////////");
-           console.log(req.file);
-        return res.status(200).send(req.file)
-
+            if (err instanceof multer.MulterError) {
+                return res.status(500).json(err)
+            } else if (err) {
+                return res.status(500).json(err)
+            }
+            console.log("/////////");
+            console.log(req.file);
+            console.log("req profile pic value going on here and there issss");
+            req.user.profile_pic = req.file.path
+            req.user.save()
+            return res.status(200).send(req.file)
     })
 }
+
