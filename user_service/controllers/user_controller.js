@@ -5,6 +5,24 @@ const auth = require('../middleware/auth.js');
 const FollowStatusModel = require('../models/follow_status.js')
 const FollowedUsersModel = require('../models/followed_users')
 const FollowingUsersModel = require('../models/following_users')
+const fs = require("fs")
+const path = require("path");
+const multer = require("multer");
+multer({
+    limits: { fieldSize: 2 * 1024 * 1024 }
+  })
+  
+// SET STORAGE
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+})
+var upload = multer({ storage: storage }).single('file')
+
 
 // Create and Save a new User
 exports.create = async(req, res) => {
@@ -190,3 +208,24 @@ exports.logout_all = async(req, res) => {
 };
 
 
+exports.upload_images = async(req, res) => {
+    console.log("inside upload images here going onnnnnnnnnnnnnnnnnnn");
+    console.log(req)
+    console.log(req.file);
+    console.log(req.body);
+    console.log("value going on heree");
+
+    upload(req, res, function (err) {
+            console.log("insie upload start function hereeee");
+            console.log(err);
+           if (err instanceof multer.MulterError) {
+               return res.status(500).json(err)
+           } else if (err) {
+               return res.status(500).json(err)
+           }
+           console.log("/////////");
+           console.log(req.file);
+        return res.status(200).send(req.file)
+
+    })
+}
