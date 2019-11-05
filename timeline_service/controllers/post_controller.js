@@ -2,12 +2,24 @@ const PostModel = require('../models/posts.js');
 const LikesModel = require('../models/likes.js')
 const CommentsModel = require('../models/comments.js');
 const ShareModel = require('../models/shares.js');
+const VideoUploadHelpers = require('../helpers/upload_videos.js')
 
 // Create a post 
-exports.create = async(req, res) => {
+exports.uploadVideo = async(req, res) => {
     console.log('insiididideineininineeiweijwiejwijewjewjeiw');
     console.log(req.body);
-    try {
+    console.log(req.file);
+    console.log(req);
+    //console.log(req.body.file)
+    console.log("66777766666667777");
+    //console.log(req.body.file._parts);
+    var uploaded_video_path = await VideoUploadHelpers(req, res);
+    console.log("uploaded video path value issssss === ", uploaded_video_path); 
+    console.log("value coming here issss ==")
+    //console.log(req);
+    //res.status(201).send({msg: "success here", videoPath: uploaded_video_path}); 
+    return res.status(200).send(uploaded_video_path)
+    /* try {
             const post_data_object = new PostModel({
                 user_id: req.body.user_id,
                 community_id: req.body.community_id,
@@ -22,10 +34,32 @@ exports.create = async(req, res) => {
             res.status(201).send({ post_data_object })
     } catch (error) {
             res.status(400).send(error)
-    }
+    } */
 }; 
 
+exports.create = async(req, res) => {
+    console.log(req);
+    console.log("iiiiiidsaidasiiiiiiiiiiiiiiii");
+    console.log(req.user);
+    try {
+            const post_data_object = new PostModel({
+                user_id: req.user._id,
+                community_id: req.body.community_id,
+                description:req.body.description,
+                location:req.body.location,
+                post_media: [req.body.path]
+                //post_media: [{media_url: "url", tags: [{user_name: "dmfskfsdkmfs", user_id: "12", place_name: "Nagai"}] }],
+            });
+ 
+             // Save 
+            await post_data_object.save()
+             
+            res.status(201).send({ post_data_object })
+    } catch (error) {
+            res.status(400).send(error)
+    } 
 
+};    
 // Update or edit information about user
 exports.update = (req, res) => {
     console.log('insiide update valuuuuueeeeeeeeeeee');

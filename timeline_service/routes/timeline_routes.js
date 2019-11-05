@@ -3,12 +3,16 @@ module.exports = (app) => {
     const likes = require('../controllers/likes_controller.js');
     const comments = require('../controllers/comments_controller.js');
     const share = require('../controllers/share_controller.js');
+    const auth = require('../middleware/auth.js');
 
     // Create a new Record / Signup
-    app.post('/post', post.create);
+
+    app.post('/postMedia/:id', post.uploadVideo);
+
+    app.post('/post/:id', auth, post.create);
 
     // Update user details
-    app.put('/post', post.update)
+    app.put('/post/:id/:post_id', auth,  post.update)
 
     // Get user details and followers information
     app.get('/post/:id', post.get);
