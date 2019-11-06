@@ -7,7 +7,7 @@ module.exports = (app) => {
 
     // Create a new Record / Signup
 
-    app.post('/postMedia/:id', post.uploadVideo);
+    app.post('/postMedia/:id', auth, post.uploadVideo);
 
     app.post('/post/:id', auth, post.create);
 
