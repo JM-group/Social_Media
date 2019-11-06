@@ -4,6 +4,7 @@ const post_schema = mongoose.Schema({
     user_id: String,
     description: String,
     post_media: Array,
+    post_type: Number,  // Visibility mode for post public = 1/private = 0
     community_id: String,
     location: Array,
     likes_count: Number,

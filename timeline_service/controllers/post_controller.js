@@ -32,7 +32,8 @@ exports.create = async(req, res) => {
                 community_id: req.body.community_id,
                 description:req.body.description,
                 location:req.body.location,
-                post_media: [req.body.path]
+                post_media: [req.body.path],
+                post_type: req.body.post_type
                 //post_media: [{media_url: "url", tags: [{user_name: "dmfskfsdkmfs", user_id: "12", place_name: "Nagai"}] }],
             });
  
