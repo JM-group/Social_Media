@@ -39,7 +39,7 @@ exports.feeds_data = {
       console.log(params.after);
       console.log(params);
       //var cursorNumeric =  parseInt(Buffer.from(params.after,'base64').toString('ascii'));
-      var cursorNumeric = params.after, hasNextPageFlag = false;
+      var cursorNumeric = params.after, hasNextPageFlag = false, hasPrevPageFlag = false;
       console.log('cursor numeric value going on hereeeeee issss ======== 888888888888888888');
       console.log(cursorNumeric);
       if (!cursorNumeric) cursorNumeric = 0;
@@ -49,6 +49,7 @@ exports.feeds_data = {
         const post_data = await PostModel.find({post_type: 1}).where('_id').gt(cursorNumeric).then(respo => {
           response_val = [respo[0]];
           //response_val['cursor'] = respo[0]._id; 
+          hasPrevPageFlag = true;
           if (respo[1] && respo[1]._id) {
             hasNextPageFlag = true;
           }
@@ -59,8 +60,9 @@ exports.feeds_data = {
           console.log("resp.length value issss ==", respo.length)
           response_val = [respo[respo.length - 1]];
           //response_val['cursor'] = respo[0]._id; 
-          if (respo[1] && respo[1]._id) {
-            hasNextPageFlag = true;
+          hasNextPageFlag = true;
+          if (respo[respo.length - 2] && respo[respo.length - 2]._id) {
+            hasPrevPageFlag = true;
           }
         });
       } else {
@@ -74,7 +76,9 @@ exports.feeds_data = {
         });
       }
       response_val[0]['has_next_page_flag'] = hasNextPageFlag;
+      response_val[0]['has_prev_page_flag'] = hasPrevPageFlag;
       response_val[0]['cursor'] = response_val[0]._id;
+      console.log("id value here iss ==", response_val[0]._id);
       if (!response_val) {
         throw new Error('Error')
       }

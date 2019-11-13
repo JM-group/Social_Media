@@ -24,6 +24,7 @@ exports.feedPageContent = new GraphQLObjectType({
         comments_count: {type: GraphQLNumber},
         likes_count: {type: GraphQLNumber},
         has_next_page_flag: {type: GraphQLBoolean},
+        has_prev_page_flag: {type: GraphQLBoolean},
         cursor: {type: GraphQLString}
       }
     }
