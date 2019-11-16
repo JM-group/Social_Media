@@ -16,6 +16,7 @@ exports.feedPageContent = new GraphQLObjectType({
     fields: function () {
       return {
         _id: { type: GraphQLString },
+        user_id: { type: GraphQLString },
         description: { type: GraphQLString },  
         post_media: { type: new GraphQLList(GraphQLJSON) },
         community_id: { type: GraphQLString },
