@@ -37,7 +37,7 @@ module.exports = (app) => {
     app.delete('/comments/:id', comments.delete);       
 
     // Create a entry for post likes
-    app.post('/likes/post/:id', likes.createPostLikes);
+    app.post('/likes/post/:id', auth, likes.createPostLikes);
 
     // Update post likes
     app.put('/likes/post/:id', likes.updatePostLikes);

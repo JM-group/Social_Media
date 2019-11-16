@@ -25,7 +25,10 @@ exports.feedPageContent = new GraphQLObjectType({
         likes_count: {type: GraphQLNumber},
         has_next_page_flag: {type: GraphQLBoolean},
         has_prev_page_flag: {type: GraphQLBoolean},
-        cursor: {type: GraphQLString}
+        cursor: {type: GraphQLString},
+        user_liked: {type: GraphQLBoolean},
+        posted_user_prof_pic: {type: GraphQLString},
+        posted_user_email: {type: GraphQLString}
       }
     }
 });

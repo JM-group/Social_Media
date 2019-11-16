@@ -5,15 +5,23 @@ const ShareModel = require('../models/shares.js');
 
 // Create a post 
 exports.createPostLikes = async(req, res) => {
+    console.log("inside create post likes values here going on --");
+    console.log(req.body);
+    console.log(req.params);
+    console.log("--------------");
     try {
             const likes_data_object = new LikesModel({
-                post_id: req.params.id,
-                liked_by:req.body.liked_by,
-                likes_count: req.body.liked_by.length,
+                post_id: req.body.post_id,
+                liked_by:[req.body.liked_by],
+                likes_count: 1,
             });
- 
-             // Save 
+            
+            // Save 
             await likes_data_object.save()
+
+            await PostModel.findByIdAndUpdate(req.params.id, {$set:{
+                likes_count: 1,
+            }})
              
             res.status(201).send({ likes_data_object })
     } catch (error) {
@@ -24,8 +32,17 @@ exports.createPostLikes = async(req, res) => {
 
 // Update post likes 
 exports.updatePostLikes = async(req, res) => {
-    var query = { post_id: req.params.id };
-    var values = { $set: {liked_by:req.body.liked_by, likes_count: req.body.liked_by.length } };
+    console.log("inside updaye post likes value heree");
+    console.log(req.params);
+    console.log(req.body);
+    var query = { post_id: req.body.post_id };
+    if (req.body.action == 1) {
+    var values = { $inc: {likes_count: 1 },
+        $push: {liked_by: req.body.liked_by} };    
+    } else {    
+    var values = { $inc: {likes_count: -1 },
+                    $push: {liked_by: req.body.liked_by} };
+    }
     LikesModel.updateOne(query, values, function(err, response) {
         if (err) throw res.status(401).send(err);;
         res.status(201).send({ "status": "Successfuly updated likes" })

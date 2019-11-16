@@ -11,6 +11,7 @@ var postLikesType = require('../types/timeline').postLikesType;
 var postContent = require('../types/posts');
 var feedContent = require('../types/feeds')
 var GraphQLNumber = require('graphql').GraphQLInt;
+const auth = require('../../middleware/graphql_auth.js');
 
 
 exports.feeds_data = {
@@ -18,6 +19,10 @@ exports.feeds_data = {
     args: {
         _id: {
           name: '_id',
+          type: new GraphQLNonNull(GraphQLString)
+        },
+        token: {
+          name: 'token',
           type: new GraphQLNonNull(GraphQLString)
         },
         first:{
@@ -39,7 +44,8 @@ exports.feeds_data = {
       console.log(params.after);
       console.log(params);
       //var cursorNumeric =  parseInt(Buffer.from(params.after,'base64').toString('ascii'));
-      var cursorNumeric = params.after, hasNextPageFlag = false, hasPrevPageFlag = false;
+      var cursorNumeric = params.after, hasNextPageFlag = false, hasPrevPageFlag = false, 
+      userLiked = false, postedUserProfPic = null, postedUserEmail = null;
       console.log('cursor numeric value going on hereeeeee issss ======== 888888888888888888');
       console.log(cursorNumeric);
       if (!cursorNumeric) cursorNumeric = 0;
@@ -75,9 +81,40 @@ exports.feeds_data = {
           }
         });
       }
+      if (params.token) {
+        console.log("after crossing token value here issssssss");
+        var user = await auth(params)
+        console.log("123344455667788990");
+        //console.log(user);
+        const like_check = await LikesModel.find({$and:[{media_id: "0", comment_id: "0", 
+            parent_comment_id: "0", liked_by: user._id}]}).then(respo => {
+           // console.log(respo)  
+            console.log("inner value hereeeeeee iiififfifififififi");
+            if(respo && respo[0]) {
+              userLiked = true;
+            }
+        });
+      }
+      if (response_val && response_val[0] && response_val[0].user_id) {
+        console.log("inside posted user check if condition value hereeeeeee");
+        //console.log(response_val[0].user_id)
+        const user_data = await UserModel.findById(response_val[0].user_id).then(respo => {
+          //console.log("val val val 11111111");
+          //console.log(respo)
+          if (respo) {
+            if (respo.profile_pic) {
+              postedUserProfPic = "/Users/admin/Desktop/social_media/" + respo.profile_pic
+            }  
+            postedUserEmail = respo.email
+          }
+        });  
+      }
       response_val[0]['has_next_page_flag'] = hasNextPageFlag;
       response_val[0]['has_prev_page_flag'] = hasPrevPageFlag;
       response_val[0]['cursor'] = response_val[0]._id;
+      response_val[0]['user_liked'] = userLiked; //To identify whether particular user liked or not
+      response_val[0]['posted_user_prof_pic'] = postedUserProfPic;
+      response_val[0]['posted_user_email'] = postedUserEmail;
       console.log("id value here iss ==", response_val[0]._id);
       if (!response_val) {
         throw new Error('Error')
