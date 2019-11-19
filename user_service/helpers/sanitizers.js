@@ -1,10 +1,9 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/user.js')
 
 const sanitizeFile = (file, cb) => {
     // Define the allowed extension
     console.log("//////////////////////////////////////////////////////");
-    let fileExts = ['png', 'jpg', 'jpeg', 'gif', 'heic']
+    let fileExts = ['png', 'jpg', 'jpeg', 'gif', 'heic', 'mov', 'MOV']
     // Check allowed extensions
     console.log(file.originalname);
     console.log(file.originalname.split('.')[1].toLowerCase());
@@ -23,4 +22,5 @@ const sanitizeFile = (file, cb) => {
     }
 
 }
+
 module.exports = sanitizeFile

@@ -17,7 +17,7 @@ var storage = multer.diskStorage({
     }, */
     destination: 'uploads',
     filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now())
+      cb(null, file.fieldname + '-' + Date.now() + ".jpg")
     }
 })
 
@@ -217,13 +217,22 @@ exports.logout_all = async(req, res) => {
 
 
 exports.upload_images = async(req, res) => {
+    console.log("^^^^^^^^^^^^^^^^^^^^^");
+    console.log(req);
+    console.log("983281312838123812381273812381273812738127381273812387123871287381273");
+    console.log(req.body);
+    console.log(req.file);
+    console.log("////////////////////////////////////////////////////////////////////////////");
     upload(req, res, function (err) {
+            console.log("before upload req value iss");
+            //console.log(req);
             if (err instanceof multer.MulterError) {
                 return res.status(500).json(err)
             } else if (err) {
                 return res.status(500).json(err)
             }
             req.user.profile_pic = req.file.path
+            console.log(req.file.path);
             req.user.save()
             return res.status(200).send(req.file)
     })
