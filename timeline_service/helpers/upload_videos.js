@@ -12,7 +12,7 @@ var storage = multer.diskStorage({
     filename: function (req, file, cb) {
       console.log("5557575755757575757575757575755755");
       //console.log(req);        
-      cb(null, "random" + '-' + Date.now())
+      cb(null, "random" + '-' + Date.now() + '.mov')
     }
 })
 
