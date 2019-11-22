@@ -40,18 +40,18 @@ exports.feeds_data = {
     },
     resolve: async function (root, params) {
       const filter_query = {_id: params._id};
-      console.log("params value here issss ==", params.first);
-      console.log(params.after);
-      console.log(params);
+      //console.log("params value here issss ==", params.first);
+      //console.log(params.after);
+      //console.log(params);
       //var cursorNumeric =  parseInt(Buffer.from(params.after,'base64').toString('ascii'));
       var cursorNumeric = params.after, hasNextPageFlag = false, hasPrevPageFlag = false, 
       userLiked = false, postedUserProfPic = null, postedUserEmail = null;
-      console.log('cursor numeric value going on hereeeeee issss ======== 888888888888888888');
-      console.log(cursorNumeric);
+      //console.log('cursor numeric value going on hereeeeee issss ======== 888888888888888888');
+      //console.log(cursorNumeric);
       if (!cursorNumeric) cursorNumeric = 0;
       var response_val = '';
       if (cursorNumeric != 0 && params.move == "2") {
-        console.log("inside 11111111111");
+        //console.log("inside 11111111111");
         const post_data = await PostModel.find({post_type: 1}).where('_id').gt(cursorNumeric).then(respo => {
           response_val = [respo[0]];
           //response_val['cursor'] = respo[0]._id; 
@@ -61,9 +61,9 @@ exports.feeds_data = {
           }
         });
       } else if (cursorNumeric != 0 && params.move == "1") {
-        console.log("inside 2222222222222222");
+        //console.log("inside 2222222222222222");
         const post_data = await PostModel.find({post_type: 1}).where('_id').lt(cursorNumeric).then(respo => {
-          console.log("resp.length value issss ==", respo.length)
+          //console.log("resp.length value issss ==", respo.length)
           response_val = [respo[respo.length - 1]];
           //response_val['cursor'] = respo[0]._id; 
           hasNextPageFlag = true;
@@ -73,7 +73,7 @@ exports.feeds_data = {
         });
       } else {
         const post_data = await PostModel.find({post_type: 1}).where('_id').then(respo => {
-          console.log("resp.length value issss ==", respo.length)
+          //console.log("resp.length value issss ==", respo.length)
           response_val = [respo[0]];
           //response_val['cursor'] = respo[0]._id; 
           if (respo[1] && respo[1]._id) {
@@ -82,21 +82,24 @@ exports.feeds_data = {
         });
       }
       if (params.token) {
-        console.log("after crossing token value here issssssss");
+        //console.log("after crossing token value here issssssss");
         var user = await auth(params)
-        console.log("123344455667788990");
-        //console.log(user);
+        //console.log("123344455667788990 /////////////////");
+        //console.log("user_id value ==", user._id);
+        //console.log(response_val[0]._id);
         const like_check = await LikesModel.find({$and:[{media_id: "0", comment_id: "0", 
-            parent_comment_id: "0", liked_by: user._id}]}).then(respo => {
+            parent_comment_id: "0", post_id: response_val[0]._id, liked_by: user._id}]}).then(respo => {
            // console.log(respo)  
             console.log("inner value hereeeeeee iiififfifififififi");
+            console.log(respo);
             if(respo && respo[0]) {
+              console.log("777777778888888899999999000000");
               userLiked = true;
             }
         });
       }
       if (response_val && response_val[0] && response_val[0].user_id) {
-        console.log("inside posted user check if condition value hereeeeeee");
+        //console.log("inside posted user check if condition value hereeeeeee");
         //console.log(response_val[0].user_id)
         const user_data = await UserModel.findById(response_val[0].user_id).then(respo => {
           //console.log("val val val 11111111");
@@ -115,7 +118,7 @@ exports.feeds_data = {
       response_val[0]['user_liked'] = userLiked; //To identify whether particular user liked or not
       response_val[0]['posted_user_prof_pic'] = postedUserProfPic;
       response_val[0]['posted_user_email'] = postedUserEmail;
-      console.log("id value here iss ==", response_val[0]._id);
+      //console.log("id value here iss ==", response_val[0]._id);
       if (!response_val) {
         throw new Error('Error')
       }

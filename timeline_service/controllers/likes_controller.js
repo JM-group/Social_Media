@@ -9,7 +9,7 @@ exports.createPostLikes = async(req, res) => {
     console.log(req.body);
     console.log(req.params);
     console.log("--------------");
-    var row_exists = false, query = { _id: req.body.post_id };;
+    var row_exists = false, query = { _id: req.body.post_id }, likes_data_object;
     try {
         await LikesModel.find({post_id : req.body.post_id}, function (err, docs) {
             if (docs.length){
@@ -22,13 +22,17 @@ exports.createPostLikes = async(req, res) => {
 
         if (!row_exists && req.body.action) {
             console.log("inside 11111111")
-            const likes_data_object = new LikesModel({
+            likes_data_object = new LikesModel({
                 post_id: req.body.post_id,
                 liked_by:[req.user._id],
                 likes_count: 1,
             });
+            console.log("before save value hereee");
             await likes_data_object.save();
-            
+            console.log("after save value hereeeee");
+            await PostModel.findByIdAndUpdate(req.body.post_id, {$set:{
+                likes_count: 1,
+            }})    
         } else {
             console.log("inside 22222222222");
             if (req.body.action) {
@@ -41,11 +45,11 @@ exports.createPostLikes = async(req, res) => {
                     $pull: {liked_by: req.user._id} };
             }
             console.log("5555555555555555");
-            await LikesModel.updateOne(query, values, function(err, response) {
-                if (err) throw res.status(401).send(err);
-                console.log("inside likes model value hereeeee");
-                console.log(LikesModel);
-            }); 
+                likes_data_object = await LikesModel.updateOne({ post_id: req.body.post_id }, values, function(err, response) {
+                    if (err) throw res.status(401).send(err);
+                    console.log("inside likes model value hereeeee");
+                    console.log(LikesModel);
+                }); 
 
             if (req.body.action) {
                 console.log("666666666666");
@@ -54,6 +58,7 @@ exports.createPostLikes = async(req, res) => {
                     if (err) throw res.status(401).send(err);
                     console.log("inside post model value here iss");
                     console.log(response);
+                    console.log("after response value isss");
                 });
             } else {
                 console.log("77777777777777");
@@ -62,12 +67,12 @@ exports.createPostLikes = async(req, res) => {
                     if (err) throw res.status(401).send(err);
                     console.log("inside post model value here iss");
                     console.log(response);
+                    console.log("after response value 223334445566");
                 });
             }    
         }   
-
         
-            
+        console.log("befoer sendin value outside here iss");    
         res.status(201).send({ likes_data_object })
     } catch (error) {
         res.status(400).send(error)
