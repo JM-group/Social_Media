@@ -63,6 +63,13 @@ app.use("/graphql", cors(), graphqlHTTP({
     graphiql: true
 }));
 
+console.log("static file in server.js here isss ==")
+console.log(express.static('post'))
+console.log("444444444444");
+console.log(express.static('public'));
+app.use('/post', express.static('post'))
+app.use('/profile_pic', express.static('uploads'))
+
 require('./user_service/routes/user_routes.js')(app);
 require('./timeline_service/routes/timeline_routes.js')(app);
 
