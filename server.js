@@ -68,7 +68,7 @@ console.log(express.static('post'))
 console.log("444444444444");
 console.log(express.static('public'));
 app.use('/post', express.static('post'))
-app.use('/profile_pic', express.static('uploads'))
+app.use('/uploads', express.static('uploads'))
 
 require('./user_service/routes/user_routes.js')(app);
 require('./timeline_service/routes/timeline_routes.js')(app);

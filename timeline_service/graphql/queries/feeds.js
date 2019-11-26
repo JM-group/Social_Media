@@ -50,7 +50,7 @@ exports.feeds_data = {
       //console.log(cursorNumeric);
       if (!cursorNumeric) cursorNumeric = 0;
       var response_val = '';
-      if (cursorNumeric != 0 && params.move == "2") {
+      if (Number(cursorNumeric) != 0 && params.move == "2") {
         //console.log("inside 11111111111");
         const post_data = await PostModel.find({post_type: 1}).where('_id').gt(cursorNumeric).then(respo => {
           response_val = [respo[0]];
@@ -60,10 +60,10 @@ exports.feeds_data = {
             hasNextPageFlag = true;
           }
         });
-      } else if (cursorNumeric != 0 && params.move == "1") {
-        //console.log("inside 2222222222222222");
+      } else if (Number(cursorNumeric) != 0 && params.move == "1") {
+        console.log("inside 2222222222222222");
         const post_data = await PostModel.find({post_type: 1}).where('_id').lt(cursorNumeric).then(respo => {
-          //console.log("resp.length value issss ==", respo.length)
+          console.log("resp.length value issss ==", respo.length)
           response_val = [respo[respo.length - 1]];
           //response_val['cursor'] = respo[0]._id; 
           hasNextPageFlag = true;
@@ -87,16 +87,20 @@ exports.feeds_data = {
         //console.log("123344455667788990 /////////////////");
         //console.log("user_id value ==", user._id);
         //console.log(response_val[0]._id);
-        const like_check = await LikesModel.find({$and:[{media_id: "0", comment_id: "0", 
-            parent_comment_id: "0", post_id: response_val[0]._id, liked_by: user._id}]}).then(respo => {
-           // console.log(respo)  
-            console.log("inner value hereeeeeee iiififfifififififi");
-            console.log(respo);
-            if(respo && respo[0]) {
-              console.log("777777778888888899999999000000");
-              userLiked = true;
-            }
-        });
+        if (user) {
+          const like_check = await LikesModel.find({$and:[{media_id: "0", comment_id: "0", 
+              parent_comment_id: "0", post_id: response_val[0]._id, liked_by: user._id}]}).then(respo => {
+            // console.log(respo)  
+              console.log("inner value hereeeeeee iiififfifififififi");
+              console.log(respo);
+              if(respo && respo[0]) {
+                console.log("777777778888888899999999000000");
+                userLiked = true;
+              }
+          });
+        } else {
+            userLiked = false;
+        }  
       }
       if (response_val && response_val[0] && response_val[0].user_id) {
         //console.log("inside posted user check if condition value hereeeeeee");
@@ -106,7 +110,7 @@ exports.feeds_data = {
           //console.log(respo)
           if (respo) {
             if (respo.profile_pic) {
-              postedUserProfPic = "/Users/admin/Desktop/social_media/" + respo.profile_pic
+              postedUserProfPic = "http://74.12.28.170/" + respo.profile_pic
             }  
             postedUserEmail = respo.email
           }
