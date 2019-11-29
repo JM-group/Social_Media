@@ -42,12 +42,12 @@ exports.feeds_data = {
       const filter_query = {_id: params._id};
       //console.log("params value here issss ==", params.first);
       //console.log(params.after);
-      //console.log(params);
+      console.log(params);
       //var cursorNumeric =  parseInt(Buffer.from(params.after,'base64').toString('ascii'));
       var cursorNumeric = params.after, hasNextPageFlag = false, hasPrevPageFlag = false, 
       userLiked = false, postedUserProfPic = null, postedUserEmail = null;
-      //console.log('cursor numeric value going on hereeeeee issss ======== 888888888888888888');
-      //console.log(cursorNumeric);
+      console.log('cursor numeric value going on hereeeeee issss ======== 888888888888888888');
+      console.log(cursorNumeric);
       if (!cursorNumeric) cursorNumeric = 0;
       var response_val = '';
       if (Number(cursorNumeric) != 0 && params.move == "2") {
@@ -81,13 +81,15 @@ exports.feeds_data = {
           }
         });
       }
+      console.log("befre params.token check heree ==");
       if (params.token) {
-        //console.log("after crossing token value here issssssss");
+        console.log("after crossing token value here issssssss");
         var user = await auth(params)
         //console.log("123344455667788990 /////////////////");
-        //console.log("user_id value ==", user._id);
-        //console.log(response_val[0]._id);
+        console.log("user_id value ==", user);
+        console.log(response_val[0]._id);
         if (user) {
+          console.log("inner 111");
           const like_check = await LikesModel.find({$and:[{media_id: "0", comment_id: "0", 
               parent_comment_id: "0", post_id: response_val[0]._id, liked_by: user._id}]}).then(respo => {
             // console.log(respo)  
@@ -99,11 +101,14 @@ exports.feeds_data = {
               }
           });
         } else {
+            console.log("inner 222");
             userLiked = false;
         }  
+      } else {
+        userLiked = false;
       }
       if (response_val && response_val[0] && response_val[0].user_id) {
-        //console.log("inside posted user check if condition value hereeeeeee");
+        console.log("inside posted user check if condition value hereeeeeee");
         //console.log(response_val[0].user_id)
         const user_data = await UserModel.findById(response_val[0].user_id).then(respo => {
           //console.log("val val val 11111111");
@@ -116,12 +121,15 @@ exports.feeds_data = {
           }
         });  
       }
+      console.log("befire fial ==,");
+      console.log(response_val[0]);
       response_val[0]['has_next_page_flag'] = hasNextPageFlag;
       response_val[0]['has_prev_page_flag'] = hasPrevPageFlag;
       response_val[0]['cursor'] = response_val[0]._id;
       response_val[0]['user_liked'] = userLiked; //To identify whether particular user liked or not
       response_val[0]['posted_user_prof_pic'] = postedUserProfPic;
       response_val[0]['posted_user_email'] = postedUserEmail;
+      console.log(response_val);
       //console.log("id value here iss ==", response_val[0]._id);
       if (!response_val) {
         throw new Error('Error')
