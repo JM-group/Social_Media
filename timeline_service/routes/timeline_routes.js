@@ -13,12 +13,15 @@ module.exports = (app) => {
 
     // Update user details
     app.put('/post/:id/:post_id', auth,  post.update)
+    
+    //Update post type alone
+    app.put('/post/type/:id/:post_id', auth, post.update_post_type)
 
     // Get user details and followers information
     app.get('/post/:id', post.get);
 
     // Delete a Note with festiveId
-    app.delete('/post/:id', post.delete);   
+    app.delete('/post/:post_id/:id', auth, post.delete);   
 
     // Post comments for posts
     app.post('/comments/', comments.create);

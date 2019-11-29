@@ -13,11 +13,13 @@ module.exports = (app) => {
 
     // Get user details and followers information
     app.get('/user/:id', auth, user.get);
+
+    app.get('/user/post/:id', auth, user.getPostedData);
     
     //Logout / Logout user from all devices
     app.post('/logout/:id', auth, user.logout);
     
-    app.post('/logout_all/:id', auth, user.logout_all)
+    app.post('/logout_all/:id', auth, user.logout_all);
 
     // Delete a Note with festiveId
     app.delete('/user/:id', user.delete);

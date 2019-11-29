@@ -6,6 +6,7 @@ const FollowStatusModel = require('../models/follow_status.js')
 const FollowedUsersModel = require('../models/followed_users')
 const FollowingUsersModel = require('../models/following_users')
 const SanitizeHelpers = require('../helpers/sanitizers.js')
+const PostModel = require('../../timeline_service/models/posts')
 const fs = require("fs")
 const path = require("path");
 const multer = require("multer");
@@ -126,19 +127,27 @@ exports.login = async(req, res) => {
 // Update or edit information about user
 exports.update = (req, res) => {
    // UserModel.find({email: req.params.id}, {$set:{
+    console.log("inside update value hereee /////");
+    console.log(req.body);
+    console.log("req.id ==", req.params);
+    console.log("req.parmas ==", req.params.id);
     req.user.updateOne({$set:{
         ph_number: req.body.ph_number,
         first_name:req.body.first_name,
         last_name:req.body.last_name,
         gender:req.body.gender,
         age:req.body.age,
-        display_name: req.body.display_name
+        display_name: req.body.display_name,
+        country: req.body.country,
+        dob: req.body.dob,
+        gender: req.body.gender
     }}).then(data => {
         if(!data) {
             return res.status(404).send({
                 message: "Record not found with id " + req.params.id
             });
         }
+        console.log("req.user vaue here iss == ///////////<<<<<>>>>>");
         res.send(req.user);
     }).catch(err => {
         if(err.kind === 'ObjectId') {
@@ -156,6 +165,24 @@ exports.update = (req, res) => {
 exports.get = (request, response) => {
     console.log('inside repsponse vlalalalallalalallllllllllllll');
     response.send(request.user)
+};
+
+//Get user data with post data
+exports.getPostedData = async(request, response) => {
+    console.log('inside repsponse vlalalalallalalallllllllllllll /////');
+    var responseVal = {}
+    var postVal = await PostModel.find({user_id: request.user._id}).select('likes_count _id post_media post_type description');
+    responseVal = {
+        first_name: request.user.first_name,
+        last_name: request.user.last_name,
+        profile_pic: request.user.profile_pic,
+        gender: request.user.gender,
+        country: request.user.country,
+        dob: request.user.dob,
+        postVal: postVal
+    }
+    //response.send(request.user)
+    response.send(responseVal)
 };
 
 // Delete user / user details / follwers following entry

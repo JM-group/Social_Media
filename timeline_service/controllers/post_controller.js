@@ -58,7 +58,7 @@ exports.update = (req, res) => {
         description:req.body.description,
         location:req.body.location,
         post_media: [{media_url: "url", tags: [{user_name: "dmfskfsdkmfs", user_id: "12", place_name: "Nagai"}] }],
-    }}, {new: true})
+    }})
     .then(data => {
         if(!data) {
             return res.status(404).send({
@@ -78,6 +78,33 @@ exports.update = (req, res) => {
     });
 };
 
+exports.update_post_type = (req, res) => {
+    console.log("inside update post type value hereeee going onn");
+    console.log(req.body);
+    console.log("=========");
+    console.log(req.params);
+    PostModel.findByIdAndUpdate(req.params.post_id, {$set:{
+        post_type: req.body.post_type
+    }})
+    .then(data => {
+        if(!data) {
+            return res.status(404).send({
+                status: false, message: "Record not found with id " + req.params.id
+            });
+        }
+        data['status'] = true;
+        res.send(data);
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                status: false, message: "Record not found with id " + req.params.id
+            });                
+        }
+        return res.status(500).send({
+            status: false, message: "Error updating record with id " + req.params.festiveId
+        });
+    });
+}
 
 //Get Post Object
 exports.get = async(req, res) => {
@@ -98,10 +125,10 @@ exports.delete = async(req, res) => {
     console.log('inside geeetttttttttt valueeeeeeee');
     console.log(req.query);
     console.log(req.params);
-    var query = { post_id: req.params.id };
+    var query = { post_id: req.params.post_id };
     var err_status = false;
     try {
-        const post_data_object = await PostModel.findByIdAndDelete(req.params.id);
+        const post_data_object = await PostModel.findByIdAndDelete(req.params.post_id);
         const comments_data_object = await CommentsModel.deleteMany(query, function (err, r) {
             if (err) {
                 err_status = true
