@@ -131,6 +131,10 @@ exports.update = (req, res) => {
     console.log(req.body);
     console.log("req.id ==", req.params);
     console.log("req.parmas ==", req.params.id);
+    
+    var parts =req.body.dob.split('-');
+    var mydate = new Date(req.body.dob); 
+    console.log("parsed value iss <<<<<<>>>>>> //// ==", mydate.toDateString());
     req.user.updateOne({$set:{
         ph_number: req.body.ph_number,
         first_name:req.body.first_name,
@@ -139,9 +143,12 @@ exports.update = (req, res) => {
         age:req.body.age,
         display_name: req.body.display_name,
         country: req.body.country,
-        dob: req.body.dob,
-        gender: req.body.gender
+        dob: mydate,
+        gender: req.body.gender,
+        country_code: req.body.country_code
     }}).then(data => {
+        console.log("after then value hereeeeeeeeee");
+        console.log(data);
         if(!data) {
             return res.status(404).send({
                 message: "Record not found with id " + req.params.id
@@ -150,11 +157,15 @@ exports.update = (req, res) => {
         console.log("req.user vaue here iss == ///////////<<<<<>>>>>");
         res.send(req.user);
     }).catch(err => {
+        console.log("inside catch error block hereee");
+        console.log(err);
         if(err.kind === 'ObjectId') {
+            console.log("11111111");
             return res.status(404).send({
                 message: "Record not found with id " + req.params.id
             });                
         }
+        console.log("or otherwise hereee going onnn");
         return res.status(500).send({
             message: "Error updating record with id " + req.params.id
         });

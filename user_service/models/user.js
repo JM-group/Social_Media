@@ -16,8 +16,15 @@ const user_schema = mongoose.Schema({
     display_name: String,
     gender: String,
     age: Number,
-    dob: Date,
+    dob: {
+        type: Date,
+        // The dates of the first and last episodes of
+        // Star Trek: The Next Generation
+        min: '1920-01-01',
+        max: '2012-12-31'
+    }, 
     country: String,
+    country_code: String,
     profile_pic: String,
     status: Boolean, 
     tokens: [{
