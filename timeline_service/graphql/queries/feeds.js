@@ -115,7 +115,7 @@ exports.feeds_data = {
           //console.log(respo)
           if (respo) {
             if (respo.profile_pic) {
-              postedUserProfPic = "http://70.54.78.237/" + respo.profile_pic
+              postedUserProfPic = "http://localhost:3000/" + respo.profile_pic
             }  
             postedUserEmail = respo.email
           }

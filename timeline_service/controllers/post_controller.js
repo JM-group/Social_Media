@@ -25,7 +25,7 @@ exports.create = async(req, res) => {
     console.log("inside insideinside insideinside insideinside insideinside inside");
     console.log(req);
     console.log("iiiiiidsaidasiiiiiiiiiiiiiiii");
-    console.log(req.user);
+    //console.log(req.user);
     try {
             const post_data_object = new PostModel({
                 user_id: req.user._id,
