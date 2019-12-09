@@ -222,12 +222,16 @@ exports.delete = (req, res) => {
 exports.logout = async(req, res) => {
     //const user = await UserModel.findByCredentials(req.body.email);
     const user = req.user;
+    //console.log("very first heree");
+    //console.log(user.tokens);
     if (user) {
         try {
             user.tokens = user.tokens.filter((token) => {
                 return token.token != req.params.id
             })
-            await user.save({status: 0})
+            //console.log("after filter heree");
+            //console.log(user.tokens);
+            await user.save({status: 0, tokens: user.tokens})
             res.send({'message': 'Successfully logged out'});
         } catch (error) {
             res.status(500).send(error)
