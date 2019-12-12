@@ -45,7 +45,7 @@ exports.feeds_data = {
       console.log(params);
       //var cursorNumeric =  parseInt(Buffer.from(params.after,'base64').toString('ascii'));
       var cursorNumeric = params.after, hasNextPageFlag = false, hasPrevPageFlag = false, 
-      userLiked = false, postedUserProfPic = null, postedUserEmail = null;
+      userLiked = false, postedUserProfPic = null, postedUserEmail = null, postedUserName = null;
       console.log('cursor numeric value going on hereeeeee issss ======== 888888888888888888');
       console.log(cursorNumeric);
       if (!cursorNumeric) cursorNumeric = 0;
@@ -118,6 +118,7 @@ exports.feeds_data = {
               postedUserProfPic = "http://localhost:3000/" + respo.profile_pic
             }  
             postedUserEmail = respo.email
+            postedUserName = respo.display_name
           }
         });  
       }
@@ -129,6 +130,7 @@ exports.feeds_data = {
       response_val[0]['user_liked'] = userLiked; //To identify whether particular user liked or not
       response_val[0]['posted_user_prof_pic'] = postedUserProfPic;
       response_val[0]['posted_user_email'] = postedUserEmail;
+      response_val[0]['posted_user_name'] = postedUserName;
       console.log(response_val);
       //console.log("id value here iss ==", response_val[0]._id);
       if (!response_val) {

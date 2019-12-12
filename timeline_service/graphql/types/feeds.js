@@ -29,7 +29,8 @@ exports.feedPageContent = new GraphQLObjectType({
         cursor: {type: GraphQLString},
         user_liked: {type: GraphQLBoolean},
         posted_user_prof_pic: {type: GraphQLString},
-        posted_user_email: {type: GraphQLString}
+        posted_user_email: {type: GraphQLString},
+        posted_user_name: {type: GraphQLString}
       }
     }
 });
