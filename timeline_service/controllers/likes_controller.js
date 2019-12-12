@@ -9,9 +9,9 @@ exports.createPostLikes = async(req, res) => {
     console.log(req.body);
     console.log(req.params);
     console.log("--------------");
-    var row_exists = false, query = { _id: req.body.post_id }, likes_data_object;
+    var row_exists = false, query = { _id: req.body.post_id }, likes_data_object, currentLikesCount;
     try {
-        await LikesModel.find({post_id : req.body.post_id}, function (err, docs) {
+        currentLikesCount = await LikesModel.find({post_id : req.body.post_id}, function (err, docs) {
             if (docs.length){
                 row_exists = true
             } else{
@@ -35,16 +35,26 @@ exports.createPostLikes = async(req, res) => {
             }})    
         } else {
             console.log("inside 22222222222");
+            console.log('req.body.post_id value here iss ==', req.body.post_id);
+             
+            console.log("//////////////////////////////////////////////////////////////////");
+            console.log(currentLikesCount._id);
+            console.log(currentLikesCount[0]);
+            console.log(currentLikesCount[0]._id);
+            console.log(currentLikesCount[0].likes_count);
+            console.log("444444444444666666666666668888888888888899999999999990000000000222222333335555");
             if (req.body.action) {
                 console.log("inside 333333333333");
-                var values = { $inc: {likes_count: 1 },
+                var values = { $set: {likes_count: currentLikesCount[0].likes_count || currentLikesCount[0].likes_count == 0 ? currentLikesCount[0].likes_count + 1 : 0 },
                     $push: {liked_by: req.user._id} };    
             } else {    
                 console.log("inside 4444444444444");
-                var values = { $inc: {likes_count: -1 },
+                var values = { $set: {likes_count: currentLikesCount[0].likes_count && currentLikesCount[0].likes_count > 0 ? currentLikesCount[0].likes_count - 1 : 0 },
                     $pull: {liked_by: req.user._id} };
             }
             console.log("5555555555555555");
+            console.log(values);
+            //res.status(201).send({ "status": "Successfuly updated likes" })
                 likes_data_object = await LikesModel.updateOne({ post_id: req.body.post_id }, values, function(err, response) {
                     if (err) throw res.status(401).send(err);
                     console.log("inside likes model value hereeeee");
@@ -53,7 +63,7 @@ exports.createPostLikes = async(req, res) => {
 
             if (req.body.action) {
                 console.log("666666666666");
-                var likeCountVal = { $inc: {likes_count: 1 }}
+                var likeCountVal = { $set: {likes_count: currentLikesCount[0].likes_count || currentLikesCount[0].likes_count == 0 ? currentLikesCount[0].likes_count + 1 : 0 }}
                 await PostModel.updateOne(query, likeCountVal, function(err, response) {
                     if (err) throw res.status(401).send(err);
                     console.log("inside post model value here iss");
@@ -62,7 +72,7 @@ exports.createPostLikes = async(req, res) => {
                 });
             } else {
                 console.log("77777777777777");
-                var likeCountVal = { $inc: {likes_count: -1 }}
+                var likeCountVal = { $set: {likes_count: currentLikesCount[0].likes_count && currentLikesCount[0].likes_count > 0 ? currentLikesCount[0].likes_count - 1 : 0 }}
                 await PostModel.updateOne(query, likeCountVal, function(err, response) {
                     if (err) throw res.status(401).send(err);
                     console.log("inside post model value here iss");
@@ -85,18 +95,34 @@ exports.updatePostLikes = async(req, res) => {
     console.log("inside updaye post likes value heree");
     console.log(req.params);
     console.log(req.body);
+    console.log(req.body.action);
+    var currentLikesCount = await LikesModel.find({post_id : req.body.post_id});
+    console.log("//////////////////////////////////////////////////////////////////");
+    console.log(currentLikesCount._id);
+    console.log(currentLikesCount[0].likes_count);
+    console.log("444444444444666666666666668888888888888899999999999990000000000222222333335555");
     var query = { post_id: req.body.post_id };
-    if (req.body.action == 1) {
-    var values = { $inc: {likes_count: 1 },
-        $push: {liked_by: req.body.liked_by} };    
+    if (req.body.action) {
+        var values = { $set: {likes_count: currentLikesCount[0].likes_count || currentLikesCount[0].likes_count == 0 ? currentLikesCount[0].likes_count + 1 : 0 },
+            $push: {liked_by: req.body.liked_by} };    
     } else {    
-    var values = { $inc: {likes_count: -1 },
-                    $push: {liked_by: req.body.liked_by} };
+        var values = { $set: {likes_count: currentLikesCount[0].likes_count && currentLikesCount[0].likes_count > 0 ? currentLikesCount[0].likes_count - 1 : 0 },
+            $push: {liked_by: req.body.liked_by} };
     }
+    console.log("values coming here isss 123123123123123123123123123123123123123123123123");
+    console.log(values);
+    console.log("///////////");
     LikesModel.updateOne(query, values, function(err, response) {
-        if (err) throw res.status(401).send(err);;
-        res.status(201).send({ "status": "Successfuly updated likes" })
+      if (err) throw res.status(401).send(err);
+        console.log("/////////// after update response value hereeeeeeee");
     });   
+    await PostModel.updateOne(query, values, function(err, response) {
+        if (err) throw res.status(401).send(err);
+        console.log("inside post model value here iss");
+        console.log(response);
+        console.log("after response value isss");
+    });
+    res.status(201).send({ "status": "Successfuly updated likes" })    
 }; 
 
 
