@@ -15,10 +15,11 @@ exports.uploadVideo = async(req, res) => {
     //console.log(req.body.file._parts);
     var uploaded_video_path = await VideoUploadHelpers(req, res);
     console.log("uploaded video path value issssss === ", uploaded_video_path); 
-    console.log("value coming here issss ==")
+    console.log("value coming here issss == ((()))");
+    console.log(uploaded_video_path);
     //console.log(req);
     //res.status(201).send({msg: "success here", videoPath: uploaded_video_path}); 
-    return res.status(200).send(uploaded_video_path)
+    res.status(201).send(uploaded_video_path)
 }; 
 
 exports.create = async(req, res) => {

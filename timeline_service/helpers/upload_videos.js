@@ -45,6 +45,7 @@ const uploadVideo = async (req, res) => {
                 //return res.status(500).json(err)
                 resolve(err);
             }
+            console.log(req.file);
             console.log("22223333333");
             console.log(req.file.path);
             console.log("333333333333333333333333333333333333333333333333333333333333");
