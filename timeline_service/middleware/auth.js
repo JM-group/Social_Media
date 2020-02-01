@@ -2,10 +2,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../../user_service/models/user.js')
 
 const auth = async(req, res, next) => {
-    console.log("valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-    console.log(req.params);
     const token = req.params.id;
-    console.log(token);
     var data = '';
     try {
         data = jwt.verify(token, 'lorem')

@@ -6,27 +6,11 @@ const VideoUploadHelpers = require('../helpers/upload_videos.js')
 
 // Create a post 
 exports.uploadVideo = async(req, res) => {
-    console.log('insiididideineininineeiweijwiejwijewjewjeiw');
-    console.log(req.body);
-    console.log(req.file);
-    console.log(req);
-    //console.log(req.body.file)
-    console.log("66777766666667777");
-    //console.log(req.body.file._parts);
     var uploaded_video_path = await VideoUploadHelpers(req, res);
-    console.log("uploaded video path value issssss === ", uploaded_video_path); 
-    console.log("value coming here issss == ((()))");
-    console.log(uploaded_video_path);
-    //console.log(req);
-    //res.status(201).send({msg: "success here", videoPath: uploaded_video_path}); 
     res.status(201).send(uploaded_video_path)
 }; 
 
 exports.create = async(req, res) => {
-    console.log("inside insideinside insideinside insideinside insideinside inside");
-    console.log(req);
-    console.log("iiiiiidsaidasiiiiiiiiiiiiiiii");
-    //console.log(req.user);
     try {
             const post_data_object = new PostModel({
                 user_id: req.user._id,
@@ -49,10 +33,6 @@ exports.create = async(req, res) => {
 };    
 // Update or edit information about user
 exports.update = (req, res) => {
-    console.log('insiide update valuuuuueeeeeeeeeeee');
-    console.log(req.params);
-    console.log(req.query);
-    console.log(req.body);
     PostModel.findByIdAndUpdate(req.query.id, {$set:{
         user_id: req.body.user_id,
         community_id: req.body.community_id,
@@ -80,10 +60,6 @@ exports.update = (req, res) => {
 };
 
 exports.update_post_type = (req, res) => {
-    console.log("inside update post type value hereeee going onn");
-    console.log(req.body);
-    console.log("=========");
-    console.log(req.params);
     PostModel.findByIdAndUpdate(req.params.post_id, {$set:{
         post_type: req.body.post_type
     }})
@@ -109,9 +85,6 @@ exports.update_post_type = (req, res) => {
 
 //Get Post Object
 exports.get = async(req, res) => {
-    console.log('inside geeetttttttttt valueeeeeeee');
-    console.log(req.query);
-    console.log(req.params);
     try {
         const post_data_object = await PostModel.findById(req.params.id);
         res.status(201).send({ post_data_object })        
@@ -123,9 +96,6 @@ exports.get = async(req, res) => {
 
 //Delete Post Object
 exports.delete = async(req, res) => {
-    console.log('inside geeetttttttttt valueeeeeeee');
-    console.log(req.query);
-    console.log(req.params);
     var query = { post_id: req.params.post_id };
     var err_status = false;
     try {
